@@ -9,9 +9,27 @@ export const checkoutSchema = z.object({
     .regex(/^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s*\d[A-Za-z]{2}$/i, 'Enter a valid UK postcode'),
   deliverySlot: z.string().min(1, 'Choose a delivery time'),
   deliveryNote: z.string().optional(),
+  cardNumber: z
+    .string()
+    .transform(v => v.replace(/\s/g, ''))
+    .refine(v => /^\d{13,19}$/.test(v), 'Enter a valid card number'),
+  cardExpiry: z
+    .string()
+    .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'MM/YY')
+    .refine(v => {
+      const [mm, yy] = v.split('/').map(Number)
+      const now = new Date()
+      const expiry = new Date(2000 + yy, mm)
+      return expiry > now
+    }, 'Card has expired'),
+  cardCvc: z.string().regex(/^\d{3,4}$/, 'Enter CVC'),
 })
 
 export type CheckoutFormValues = z.infer<typeof checkoutSchema>
+
+// Recognized Stripe test-mode card numbers — this checkout is a front-end mock,
+// no real charge is ever created.
+export const TEST_CARD_DECLINE = '4000000000000002'
 
 export interface DeliverySlot {
   id: string

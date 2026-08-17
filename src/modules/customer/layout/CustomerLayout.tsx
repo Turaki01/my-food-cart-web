@@ -1,7 +1,8 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { ChevronDown, Search, ShoppingCart } from 'lucide-react'
+import { ChevronDown, Search, ShoppingCart, User as UserIcon } from 'lucide-react'
 import { cn } from '@shared/lib/utils'
 import { useAuthStore } from '@shared/stores/auth.store'
+import { useLocationStore } from '@shared/stores/location.store'
 import { useCartStore, cartSubtotal, cartItemCount } from '@shared/stores/cart.store'
 import { Logo } from '@shared/components/Logo'
 
@@ -18,7 +19,8 @@ export function CustomerLayout() {
 
 function CustomerHeader() {
   const navigate = useNavigate()
-  const { user, deliveryArea } = useAuthStore()
+  const user = useAuthStore(s => s.user)
+  const deliveryArea = useLocationStore(s => s.deliveryArea)
   const { items, deliveryFee } = useCartStore()
   const cartCount = cartItemCount(items)
   const cartTotal = cartSubtotal(items) + (cartCount > 0 ? deliveryFee : 0)
@@ -33,7 +35,10 @@ function CustomerHeader() {
         </button>
 
         {/* Location picker */}
-        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm text-gray-700 hover:border-brand-300 hover:bg-brand-50 transition-colors shrink-0">
+        <button
+          onClick={() => navigate('/customer/zone-check')}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm text-gray-700 hover:border-brand-300 hover:bg-brand-50 transition-colors shrink-0"
+        >
           <span className="h-2 w-2 rounded-full bg-brand-600" />
           <span className="font-medium">{deliveryArea ?? 'Select area'}</span>
           <ChevronDown size={13} className="text-gray-400" />
@@ -53,8 +58,9 @@ function CustomerHeader() {
         {!user && (
           <button
             onClick={() => navigate('/auth/phone')}
-            className="text-sm font-medium text-gray-700 hover:text-gray-900 shrink-0"
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 shrink-0"
           >
+            <UserIcon size={15} />
             Sign in
           </button>
         )}

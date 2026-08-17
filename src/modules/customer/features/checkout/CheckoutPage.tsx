@@ -2,15 +2,18 @@ import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertCircle, ArrowLeft, Lock } from 'lucide-react'
+import { AlertCircle, ArrowLeft, ShieldCheck } from 'lucide-react'
 import { cn } from '@shared/lib/utils'
 import { Input } from '@shared/components/Input'
 import { useCartStore, cartSubtotal } from '@shared/stores/cart.store'
 import { useAuthStore } from '@shared/stores/auth.store'
+import { useLocationStore } from '@shared/stores/location.store'
 import { MOCK_STORES } from '@modules/customer/features/home/mock'
+import { MockCardPayment } from './components/MockCardPayment'
 import {
   checkoutSchema,
   generateDeliverySlots,
+  TEST_CARD_DECLINE,
   type CheckoutFormValues,
   type DeliverySlot,
 } from './checkout.schema'
@@ -18,7 +21,8 @@ import {
 export function CheckoutPage() {
   const navigate = useNavigate()
   const { items, storeId, storeName, deliveryFee, clearCart } = useCartStore()
-  const { user, deliveryArea } = useAuthStore()
+  const user = useAuthStore(s => s.user)
+  const deliveryArea = useLocationStore(s => s.deliveryArea)
 
   const [paymentError, setPaymentError] = useState<string | null>(null)
   const [isPlacing, setIsPlacing] = useState(false)
@@ -30,6 +34,7 @@ export function CheckoutPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     watch,
     setValue,
@@ -42,24 +47,37 @@ export function CheckoutPage() {
       postcode: '',
       deliverySlot: slots[0]?.id ?? '',
       deliveryNote: '',
+      cardNumber: '',
+      cardExpiry: '',
+      cardCvc: '',
     },
   })
 
   const selectedSlot = watch('deliverySlot')
 
-  if (items.length === 0) return <Navigate to="/customer/cart" replace />
+  // Skip the empty-basket redirect once an order is placing — clearCart() fires
+  // before the (lazy-loaded) confirmation route finishes mounting, and this
+  // page stays mounted in the gap.
+  if (items.length === 0 && !isPlacing) return <Navigate to="/customer/cart" replace />
+  if (!user) return <Navigate to="/auth/phone" state={{ from: '/customer/checkout' }} replace />
 
   const onSubmit = async (data: CheckoutFormValues) => {
     setPaymentError(null)
     setIsPlacing(true)
 
-    // TODO: POST /api/orders  { cart, delivery: data, paymentMethodId }
+    // Mock Stripe: no real PaymentIntent is created. Card number decides the outcome,
+    // mirroring Stripe's own test-card conventions.
     await new Promise(r => setTimeout(r, 1400))
+
+    if (data.cardNumber.replace(/\s/g, '') === TEST_CARD_DECLINE) {
+      setPaymentError('Your card was declined. Try a different card.')
+      setIsPlacing(false)
+      return
+    }
 
     const slot = slots.find(s => s.id === data.deliverySlot)
     const orderNumber = `MFC-${Date.now().toString(36).toUpperCase().slice(-6)}`
 
-    clearCart()
     navigate('/customer/order-confirmation', {
       replace: true,
       state: {
@@ -76,6 +94,7 @@ export function CheckoutPage() {
         phone: user?.phone,
       },
     })
+    clearCart()
   }
 
   return (
@@ -90,12 +109,6 @@ export function CheckoutPage() {
       </Link>
 
       <h1 className="text-lg font-semibold text-gray-900 mb-6">Checkout</h1>
-
-      <div className="mb-6 max-w-2xl rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3">
-        <p className="text-xs text-amber-800">
-          You&apos;re placing a single-store order from <span className="font-semibold">{storeName}</span>.
-        </p>
-      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-5 items-start">
@@ -160,7 +173,7 @@ export function CheckoutPage() {
 
             {/* Payment */}
             <FormSection title="Payment">
-              <PaymentPlaceholder />
+              <MockCardPayment control={control} errors={errors} />
             </FormSection>
 
           </div>
@@ -219,13 +232,13 @@ export function CheckoutPage() {
                     'w-full py-2.5 rounded-xl text-sm font-semibold transition-all',
                     isPlacing
                       ? 'bg-brand-400 text-white cursor-wait'
-                      : 'bg-brand-600 text-white hover:bg-brand-700'
+                      : 'bg-brand-600 text-white hover:bg-brand-700 active:scale-[0.99]'
                   )}
                 >
                   {isPlacing ? 'Placing order…' : `Place order · £${(total / 100).toFixed(2)}`}
                 </button>
                 <p className="flex items-center justify-center gap-1 text-[10px] text-gray-400 mt-2">
-                  <Lock size={10} /> Secured by Stripe
+                  <ShieldCheck size={10} /> Mock checkout — Stripe test mode
                 </p>
               </div>
             </div>
@@ -299,45 +312,6 @@ function SlotCard({
       </p>
       <p className="text-[10px] text-gray-400 mt-0.5">{slot.sublabel}</p>
     </button>
-  )
-}
-
-function PaymentPlaceholder() {
-  return (
-    <div className="space-y-2.5">
-      <div className="border border-gray-200 rounded-2xl px-4 py-3 bg-gray-50/50">
-        <p className="text-[10px] text-gray-400 mb-1.5 font-medium tracking-wide uppercase">Card number</p>
-        <input
-          type="text"
-          inputMode="numeric"
-          placeholder="1234 5678 9012 3456"
-          maxLength={19}
-          className="w-full text-sm text-gray-700 bg-transparent placeholder:text-gray-300 focus:outline-none"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-2.5">
-        <div className="border border-gray-200 rounded-2xl px-4 py-3 bg-gray-50/50">
-          <p className="text-[10px] text-gray-400 mb-1.5 font-medium tracking-wide uppercase">Expiry</p>
-          <input
-            type="text"
-            placeholder="MM / YY"
-            maxLength={7}
-            className="w-full text-sm text-gray-700 bg-transparent placeholder:text-gray-300 focus:outline-none"
-          />
-        </div>
-        <div className="border border-gray-200 rounded-2xl px-4 py-3 bg-gray-50/50">
-          <p className="text-[10px] text-gray-400 mb-1.5 font-medium tracking-wide uppercase">CVC</p>
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="···"
-            maxLength={4}
-            className="w-full text-sm text-gray-700 bg-transparent placeholder:text-gray-300 focus:outline-none"
-          />
-        </div>
-      </div>
-    
-    </div>
   )
 }
 

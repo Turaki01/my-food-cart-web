@@ -17,13 +17,27 @@ export default {
           800: '#114828',
           900: '#0d3a20',
         },
+        spice: {
+          50:  '#fdf5ed',
+          100: '#fbe7d3',
+          200: '#f5c99e',
+          300: '#eda869',
+          400: '#e4863f',
+          500: '#d66b22',
+          600: '#b8541a',
+          700: '#934216',
+          800: '#763617',
+          900: '#622d15',
+        },
         surface: {
-          DEFAULT: '#f5f4ef',
+          DEFAULT: '#faf6ef',
           card:    '#ffffff',
+          ink:     '#1c1a16',
         },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
       },
       borderRadius: {
         '2xl': '1rem',

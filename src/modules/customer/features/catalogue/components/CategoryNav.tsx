@@ -49,8 +49,8 @@ export function CategoryNav({ categories }: CategoryNavProps) {
             className={cn(
               'px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150',
               active === cat
-                ? 'bg-brand-600 text-white shadow-sm'
-                : 'bg-white border border-gray-200 text-gray-600 hover:border-brand-300 hover:text-gray-800'
+                ? 'bg-spice-500 text-white shadow-sm'
+                : 'bg-white border border-gray-200 text-gray-600 hover:border-spice-300 hover:text-gray-800'
             )}
           >
             {cat}

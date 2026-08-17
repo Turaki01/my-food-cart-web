@@ -2,16 +2,17 @@ import { Suspense } from 'react'
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { Spinner } from '@shared/components/Spinner'
 import { useAuthStore } from '@shared/stores/auth.store'
+import { useLocationStore } from '@shared/stores/location.store'
 import { customerRoutes } from '@modules/customer/routes'
 import { storePartnerRoutes } from '@modules/store-partner/routes'
 import { opsRoutes } from '@modules/ops-dispatch/routes'
 
 function RootRedirect() {
-  const { user, hasCompletedZoneCheck } = useAuthStore()
+  const user = useAuthStore(s => s.user)
+  const hasCompletedZoneCheck = useLocationStore(s => s.hasCompletedZoneCheck)
 
-  if (!user) return <Navigate to="/auth/phone" replace />
-  if (user.role === 'store_partner') return <Navigate to="/store" replace />
-  if (user.role === 'ops') return <Navigate to="/ops" replace />
+  if (user?.role === 'store_partner') return <Navigate to="/store" replace />
+  if (user?.role === 'ops') return <Navigate to="/ops" replace />
   if (!hasCompletedZoneCheck) return <Navigate to="/customer/zone-check" replace />
   return <Navigate to="/customer/home" replace />
 }

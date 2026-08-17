@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Logo } from '@shared/components/Logo'
 import { PhoneEntryForm } from '../components/PhoneEntryForm'
 import { useAuthStore } from '@shared/stores/auth.store'
@@ -7,20 +7,28 @@ import type { PhoneFormValues } from '../auth.schema'
 
 export function PhoneEntryPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = (location.state as { from?: string } | null)?.from
   const setPendingPhone = useAuthStore(s => s.setPendingPhone)
+
+  const isCheckoutReturn = from === '/customer/checkout'
 
   const handleSubmit = async ({ phone }: PhoneFormValues) => {
     await sendOTP(phone)
     setPendingPhone(phone)
-    navigate('/auth/otp')
+    navigate('/auth/otp', { state: { from } })
   }
 
   return (
     <AuthShell>
       <Logo size="md" className="justify-center mb-7" />
-      <h1 className="text-lg font-semibold text-gray-900 text-center mb-1">Welcome</h1>
+      <h1 className="font-display text-xl font-semibold text-gray-900 text-center mb-1">
+        {isCheckoutReturn ? 'Verify to place your order' : 'Welcome'}
+      </h1>
       <p className="text-sm text-gray-500 text-center mb-6">
-        Enter your phone number to get started
+        {isCheckoutReturn
+          ? "Your basket is saved — we just need your number to confirm it's you"
+          : 'Enter your phone number to get started'}
       </p>
       <PhoneEntryForm onSubmit={handleSubmit} />
     </AuthShell>
