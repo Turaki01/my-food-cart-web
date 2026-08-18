@@ -25,6 +25,9 @@ const CartPage = lazy(() =>
 const CheckoutPage = lazy(() =>
   import('./features/checkout/CheckoutPage').then(m => ({ default: m.CheckoutPage }))
 )
+const PaymentPage = lazy(() =>
+  import('./features/checkout/PaymentPage').then(m => ({ default: m.PaymentPage }))
+)
 const OrderConfirmationPage = lazy(() =>
   import('./features/order-confirmation/OrderConfirmationPage').then(m => ({ default: m.OrderConfirmationPage }))
 )
@@ -56,6 +59,7 @@ export const customerRoutes: RouteObject[] = [
       { path: '/customer/profile', element: <PlaceholderPage label="Profile & settings" /> },
       { path: '/customer/cart',               element: <Suspense fallback={fallback}><CartPage /></Suspense> },
       { path: '/customer/checkout',           element: <Suspense fallback={fallback}><CheckoutPage /></Suspense> },
+      { path: '/customer/payment',            element: <Suspense fallback={fallback}><PaymentPage /></Suspense> },
       { path: '/customer/order-confirmation', element: <Suspense fallback={fallback}><OrderConfirmationPage /></Suspense> },
       { path: '/customer/store/:storeId',     element: <Suspense fallback={fallback}><CataloguePage /></Suspense> },
     ],

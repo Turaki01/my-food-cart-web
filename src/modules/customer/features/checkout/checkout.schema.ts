@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const checkoutSchema = z.object({
+export const checkoutDetailsSchema = z.object({
   line1: z.string().min(3, 'Enter your street address'),
   line2: z.string().optional(),
   postcode: z
@@ -9,6 +9,9 @@ export const checkoutSchema = z.object({
     .regex(/^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s*\d[A-Za-z]{2}$/i, 'Enter a valid UK postcode'),
   deliverySlot: z.string().min(1, 'Choose a delivery time'),
   deliveryNote: z.string().optional(),
+})
+
+export const paymentSchema = z.object({
   cardNumber: z
     .string()
     .transform(v => v.replace(/\s/g, ''))
@@ -25,6 +28,10 @@ export const checkoutSchema = z.object({
   cardCvc: z.string().regex(/^\d{3,4}$/, 'Enter CVC'),
 })
 
+export const checkoutSchema = checkoutDetailsSchema.merge(paymentSchema)
+
+export type CheckoutDetailsFormValues = z.infer<typeof checkoutDetailsSchema>
+export type PaymentFormValues = z.infer<typeof paymentSchema>
 export type CheckoutFormValues = z.infer<typeof checkoutSchema>
 
 // Recognized Stripe test-mode card numbers — this checkout is a front-end mock,

@@ -11,7 +11,7 @@ export function PhoneEntryPage() {
   const from = (location.state as { from?: string } | null)?.from
   const setPendingPhone = useAuthStore(s => s.setPendingPhone)
 
-  const isCheckoutReturn = from === '/customer/checkout'
+  const isCheckoutReturn = from === '/customer/checkout' || from === '/customer/payment'
 
   const handleSubmit = async ({ phone }: PhoneFormValues) => {
     await sendOTP(phone)

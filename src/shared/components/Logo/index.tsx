@@ -12,7 +12,7 @@ export function Logo({ size = 'md', className }: LogoProps) {
   return (
     <div className={cn('flex items-center gap-2.5', className)}>
       <BrandIcon size={ICON_SIZES[size]} />
-      <span className={cn('font-semibold text-gray-900', TEXT_SIZES[size])}>
+      <span className={cn('font-display font-extrabold tracking-[-0.03em] text-slate-900', TEXT_SIZES[size])}>
         My Food Cart
       </span>
     </div>

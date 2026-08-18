@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '@shared/lib/utils'
 
 interface CategoryNavProps {
@@ -7,53 +7,53 @@ interface CategoryNavProps {
 
 export function CategoryNav({ categories }: CategoryNavProps) {
   const [active, setActive] = useState(categories[0] ?? '')
-  const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (categories.length === 0) return
 
     const observers: IntersectionObserver[] = []
 
-    categories.forEach(cat => {
-      const el = document.getElementById(`cat-${CSS.escape(cat)}`)
-      if (!el) return
+    categories.forEach(category => {
+      const element = document.getElementById(`cat-${CSS.escape(category)}`)
+      if (!element) return
+
       const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActive(cat) },
+        ([entry]) => {
+          if (entry.isIntersecting) setActive(category)
+        },
         { rootMargin: '-20% 0px -65% 0px', threshold: 0 }
       )
-      observer.observe(el)
+
+      observer.observe(element)
       observers.push(observer)
     })
 
-    return () => observers.forEach(o => o.disconnect())
+    return () => observers.forEach(observer => observer.disconnect())
   }, [categories])
 
-  const scrollToCategory = (cat: string) => {
-    const el = document.getElementById(`cat-${CSS.escape(cat)}`)
-    if (!el) return
-    const headerOffset = 120 // header + nav height
-    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset
+  const scrollToCategory = (category: string) => {
+    const element = document.getElementById(`cat-${CSS.escape(category)}`)
+    if (!element) return
+    const headerOffset = 120
+    const top = element.getBoundingClientRect().top + window.scrollY - headerOffset
     window.scrollTo({ top, behavior: 'smooth' })
   }
 
   return (
-    <div
-      ref={scrollRef}
-      className="overflow-x-auto scrollbar-none py-3 border-b border-gray-100 bg-surface -mx-6 px-6"
-    >
-      <div className="flex gap-2 w-max">
-        {categories.map(cat => (
+    <div className="-mx-5 overflow-x-auto px-5 py-2 scrollbar-none md:-mx-6 md:px-6">
+      <div className="flex w-max gap-2">
+        {categories.map(category => (
           <button
-            key={cat}
-            onClick={() => scrollToCategory(cat)}
+            key={category}
+            onClick={() => scrollToCategory(category)}
             className={cn(
-              'px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150',
-              active === cat
-                ? 'bg-spice-500 text-white shadow-sm'
-                : 'bg-white border border-gray-200 text-gray-600 hover:border-spice-300 hover:text-gray-800'
+              'rounded-full border px-4 py-2 text-xs font-semibold transition-all',
+              active === category
+                ? 'border-brand-200 bg-brand-50 text-brand-700'
+                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-900'
             )}
           >
-            {cat}
+            {category}
           </button>
         ))}
       </div>

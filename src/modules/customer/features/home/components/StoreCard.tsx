@@ -1,4 +1,4 @@
-import { Clock, MapPin } from 'lucide-react'
+import { Clock3, MapPin, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@shared/lib/utils'
 import type { MockStore } from '../mock'
@@ -16,80 +16,73 @@ export function StoreCard({ store }: StoreCardProps) {
   }
 
   return (
-    <div
+    <article
       role={store.isOpen ? 'button' : undefined}
       tabIndex={store.isOpen ? 0 : undefined}
-      onKeyDown={e => e.key === 'Enter' && handleClick()}
       onClick={handleClick}
+      onKeyDown={event => event.key === 'Enter' && handleClick()}
       className={cn(
-        'group bg-white rounded-3xl border border-gray-100 overflow-hidden transition-all duration-200',
-        store.isOpen
-          ? 'cursor-pointer hover:shadow-md hover:-translate-y-0.5'
-          : 'opacity-60 cursor-default'
+        'overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_22px_44px_-36px_rgba(15,23,42,0.2)] transition-all',
+        store.isOpen ? 'cursor-pointer hover:-translate-y-1 hover:shadow-[0_24px_48px_-30px_rgba(15,23,42,0.24)]' : 'opacity-60'
       )}
     >
-      {/* Cover */}
-      <div className={cn('relative h-44 bg-gradient-to-br', store.coverGradient)}>
+      <div className={cn('relative h-48 bg-gradient-to-br', store.coverGradient)}>
         {store.imageUrl && (
           <img src={store.imageUrl} alt={store.name} className="absolute inset-0 h-full w-full object-cover" />
         )}
-        {/* Dark overlay for closed stores */}
-        {!store.isOpen && <div className="absolute inset-0 bg-black/30" />}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02),rgba(15,23,42,0.24))]" />
 
-        {/* Status badge */}
-        <div className="absolute top-3 right-3">
-          <span className={cn(
-            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold backdrop-blur-sm',
-            store.isOpen
-              ? 'bg-white/90 text-brand-700'
-              : 'bg-black/50 text-white'
-          )}>
-            <span className={cn('h-1.5 w-1.5 rounded-full', store.isOpen ? 'bg-brand-500' : 'bg-gray-400')} />
-            {store.isOpen ? 'Open now' : 'Closed'}
+        <div className="absolute left-4 top-4 flex items-center gap-2">
+          <span className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-sm">
+            {store.categoryTags[0]}
           </span>
+          {!store.isOpen && (
+            <span className="rounded-full bg-slate-900/80 px-3 py-1 text-[11px] font-semibold text-white">
+              Closed
+            </span>
+          )}
         </div>
 
-        {/* Photo placeholder label */}
         {!store.imageUrl && (
-          <div className="absolute bottom-2.5 left-3">
-            <span className="text-white/40 text-[11px] font-mono">[ store front photo ]</span>
+          <div className="absolute inset-x-4 bottom-4 rounded-[1.4rem] bg-white/90 p-4 backdrop-blur-sm">
+            <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand-600">Featured store</p>
+            <p className="mt-1 text-xl font-extrabold tracking-[-0.04em] text-slate-900">{store.name}</p>
           </div>
         )}
       </div>
 
-      {/* Info */}
-      <div className="p-4">
-        <div className="mb-3">
-          <h3 className={cn(
-            'font-semibold text-[15px] leading-snug transition-colors',
-            store.isOpen ? 'text-gray-900 group-hover:text-brand-700' : 'text-gray-600'
-          )}>
-            {store.name}
-          </h3>
-          <div className="flex items-center gap-1 mt-0.5">
-            <MapPin size={11} className="text-gray-400 shrink-0" />
-            <span className="text-xs text-gray-500">{store.area}</span>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-extrabold tracking-[-0.03em] text-slate-900">{store.name}</h3>
+            <div className="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
+              <MapPin size={13} className="text-slate-400" />
+              <span>{store.area}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
+            <Star size={12} className="fill-current" />
+            4.8
           </div>
         </div>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5 mb-3">
+        <div className="mt-4 flex flex-wrap gap-2">
           {store.categoryTags.map(tag => (
-            <span key={tag} className="text-[11px] text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">
+            <span key={tag} className="rounded-full bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-500">
               {tag}
             </span>
           ))}
         </div>
 
-        {/* Footer row */}
-        <div className="flex items-center justify-between pt-3 border-t border-gray-50 text-xs text-gray-500">
-          <div className="flex items-center gap-1">
-            <Clock size={12} className="text-gray-400" />
-            <span>{store.estimatedDeliveryMin}–{store.estimatedDeliveryMax} min</span>
+        <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-sm text-slate-500">
+          <div className="flex items-center gap-1.5">
+            <Clock3 size={14} className="text-slate-400" />
+            <span>{store.estimatedDeliveryMin}-{store.estimatedDeliveryMax} min</span>
           </div>
-          <span>Min. £{(store.minimumOrderValue / 100).toFixed(0)}</span>
+          <span className="font-semibold text-slate-700">£{(store.minimumOrderValue / 100).toFixed(0)} min</span>
         </div>
       </div>
-    </div>
+    </article>
   )
 }

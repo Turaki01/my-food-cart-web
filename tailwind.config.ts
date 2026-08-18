@@ -36,8 +36,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'Segoe UI', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'Inter', 'Segoe UI', 'sans-serif'],
       },
       borderRadius: {
         '2xl': '1rem',

@@ -1,8 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: light;
+    --paper: #f5f7fb;
+    --paper-strong: #ffffff;
+    --paper-deep: #eef2f7;
+    --ink: #131927;
+    --muted: #667085;
+    --olive: #175c47;
+    --olive-soft: #2c7a62;
+    --amber: #1A6B3A;
+    --amber-soft: #dff2e6;
+    --line: rgba(15, 23, 42, 0.08);
+  }
+
   *,
   *::before,
   *::after {
@@ -17,18 +33,41 @@
 
   body {
     margin: 0;
-    font-family: Inter, system-ui, sans-serif;
-    background-color: #f5f4ef;
+    font-family: 'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at top right, rgba(255, 122, 26, 0.08), transparent 18%),
+      linear-gradient(180deg, #fbfcfe 0%, #f5f7fb 100%);
   }
 
   #root {
     min-height: 100dvh;
+  }
+
+  ::selection {
+    background: rgba(217, 125, 45, 0.22);
+    color: var(--ink);
+  }
+
+  a {
+    color: inherit;
   }
 }
 
 @layer utilities {
   .scrollbar-none::-webkit-scrollbar { display: none; }
   .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .paper-panel {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 255, 0.95));
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 50px -36px rgba(15, 23, 42, 0.18);
+  }
+
+  .section-kicker {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
 
   @keyframes shake {
     0%, 100% { transform: translateX(0); }

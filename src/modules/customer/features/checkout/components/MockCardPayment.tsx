@@ -1,11 +1,11 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form'
 import { ShieldCheck } from 'lucide-react'
 import { cn } from '@shared/lib/utils'
-import type { CheckoutFormValues } from '../checkout.schema'
+import type { PaymentFormValues } from '../checkout.schema'
 
 interface MockCardPaymentProps {
-  control: Control<CheckoutFormValues>
-  errors: FieldErrors<CheckoutFormValues>
+  control: Control<PaymentFormValues>
+  errors: FieldErrors<PaymentFormValues>
 }
 
 type CardBrand = 'visa' | 'mastercard' | 'amex' | null

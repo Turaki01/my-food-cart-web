@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckCircle2, MapPin, Clock, Store } from 'lucide-react'
+import { CheckCircle2, Clock3, MapPin, Store } from 'lucide-react'
 import { BrandIcon } from '@shared/components/Logo'
 import { Input } from '@shared/components/Input'
 import { Button } from '@shared/components/Button'
@@ -57,134 +57,141 @@ export function ZoneCheckPage() {
   }
 
   return (
-    <div className="relative min-h-[100dvh] bg-brand-700 flex flex-col items-center justify-center px-5 py-10 overflow-hidden">
-      {/* Ambient texture, echoes the home hero */}
-      <div
-        className="absolute inset-0 opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage: `repeating-linear-gradient(
-            -45deg, #fff 0px, #fff 1px, transparent 1px, transparent 14px
-          )`,
-        }}
-      />
-      <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-spice-500/20 blur-3xl pointer-events-none" />
+    <div className="relative min-h-[100dvh] overflow-hidden bg-transparent px-5 py-10">
+      <div className="pointer-events-none absolute left-[-12rem] top-16 h-72 w-72 rounded-full bg-brand-50 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-10rem] top-8 h-64 w-64 rounded-full bg-slate-100 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-[-10rem] left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-brand-50/70 blur-3xl" />
 
-      <div className="relative w-full max-w-sm space-y-5">
-        <div className="flex items-center justify-center gap-2.5 mb-1">
-          <BrandIcon size={36} />
-          <span className="font-semibold text-base text-white">My Food Cart</span>
-        </div>
+      <div className="mx-auto flex min-h-[calc(100dvh-5rem)] w-full max-w-md items-center justify-center">
+        <div className="w-full">
+          <div className="mb-5 flex items-center justify-center gap-3">
+            <BrandIcon size={40} />
+            <span className="text-[2rem] font-extrabold tracking-[-0.05em] text-slate-900">My Food Cart</span>
+          </div>
 
-        {step === 'postcode' && (
-          <Card className="shadow-xl">
-            <div className="flex flex-col items-center gap-2 mb-6 text-center">
-              <div className="h-12 w-12 rounded-2xl bg-brand-50 flex items-center justify-center">
-                <MapPin className="text-brand-600" size={24} />
-              </div>
-              <h1 className="font-display text-2xl font-semibold text-gray-900">
-                Where should we deliver?
-              </h1>
-              <p className="text-sm text-gray-500">
-                Every African &amp; Caribbean store in your area, in one basket
-              </p>
-            </div>
-
-            <form onSubmit={postcodeForm.handleSubmit(handlePostcodeSubmit)} className="flex flex-col gap-4" noValidate>
-              <Input
-                label="Your postcode"
-                placeholder="SE15 4RH"
-                {...postcodeForm.register('postcode')}
-                error={postcodeForm.formState.errors.postcode?.message}
-              />
-              <Button
-                type="submit"
-                size="lg"
-                fullWidth
-                loading={postcodeForm.formState.isSubmitting}
-              >
-                Check delivery
-              </Button>
-            </form>
-
-            <div className="flex items-center gap-2 mt-5 pt-5 border-t border-gray-100 text-xs text-gray-400">
-              <Store size={13} className="text-gray-400 shrink-0" />
-              Browse freely — you only sign in when you're ready to order
-            </div>
-          </Card>
-        )}
-
-        {step === 'in-zone' && matchedZone && (
-          <Card className="shadow-xl">
-            <div className="flex flex-col items-center gap-3 text-center">
-              <CheckCircle2 className="text-brand-600" size={48} />
-              <h2 className="font-display text-xl font-semibold text-gray-900">Great news!</h2>
-              <p className="text-gray-600">
-                We deliver to <span className="font-semibold text-brand-700">{matchedZone.name}</span>.
-              </p>
-              <div className="flex items-center gap-2 bg-brand-50 text-brand-700 rounded-2xl px-4 py-2.5 text-sm font-medium">
-                <Clock size={16} />
-                Estimated delivery: {matchedZone.estimatedMinutes}–{matchedZone.estimatedMinutes + 15} min
-              </div>
-              <Button size="lg" fullWidth className="mt-2" onClick={handleContinue}>
-                Start shopping
-              </Button>
-            </div>
-          </Card>
-        )}
-
-        {step === 'out-of-zone' && (
-          <Card className="shadow-xl">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col items-center gap-2 text-center">
-                <div className="h-12 w-12 rounded-2xl bg-spice-50 flex items-center justify-center">
-                  <MapPin className="text-spice-500" size={24} />
+          {step === 'postcode' && (
+            <Card className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_28px_60px_-40px_rgba(15,23,42,0.18)] md:p-7">
+              <div className="mb-6 flex flex-col items-center gap-3 text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-brand-50">
+                  <MapPin className="text-brand-600" size={28} />
                 </div>
-                <h2 className="font-display text-xl font-semibold text-gray-900">Not quite there yet</h2>
-                <p className="text-sm text-gray-500">
-                  We don't deliver to <span className="font-medium">{enteredPostcode}</span> yet.
-                  Leave your details and we'll let you know when we expand.
-                </p>
+                <div>
+                  <h1 className="text-3xl font-extrabold tracking-[-0.05em] text-slate-950">
+                    Where should we deliver?
+                  </h1>
+                  <p className="mt-3 text-base leading-8 text-slate-500">
+                    Check which African and Caribbean stores are delivering to your postcode today.
+                  </p>
+                </div>
               </div>
 
-              <form onSubmit={waitlistForm.handleSubmit(handleWaitlistSubmit)} className="flex flex-col gap-3" noValidate>
+              <form onSubmit={postcodeForm.handleSubmit(handlePostcodeSubmit)} className="flex flex-col gap-4" noValidate>
                 <Input
-                  label="Your name"
-                  placeholder="Amara"
-                  {...waitlistForm.register('name')}
-                  error={waitlistForm.formState.errors.name?.message}
-                />
-                <Input
-                  label="Email address"
-                  type="email"
-                  placeholder="amara@example.com"
-                  {...waitlistForm.register('email')}
-                  error={waitlistForm.formState.errors.email?.message}
+                  label="Your postcode"
+                  placeholder="SE15 4RH"
+                  {...postcodeForm.register('postcode')}
+                  error={postcodeForm.formState.errors.postcode?.message}
                 />
                 <Button
                   type="submit"
                   size="lg"
                   fullWidth
-                  variant="accent"
-                  loading={waitlistForm.formState.isSubmitting}
+                  loading={postcodeForm.formState.isSubmitting}
+                  className="rounded-2xl"
                 >
-                  Join waitlist
+                  Check delivery
                 </Button>
               </form>
-            </div>
-          </Card>
-        )}
 
-        {step === 'waitlisted' && (
-          <Card className="shadow-xl">
-            <div className="flex flex-col items-center gap-3 text-center">
-              <CheckCircle2 className="text-brand-600" size={48} />
-              <h2 className="font-display text-xl font-semibold text-gray-900">You're on the list!</h2>
-              <p className="text-sm text-gray-500">
-                We'll email you as soon as we deliver to your area.
-              </p>
-            </div>
-          </Card>
-        )}
+              <div className="mt-6 flex items-center gap-2 border-t border-slate-100 pt-5 text-sm text-slate-400">
+                <Store size={15} className="shrink-0 text-slate-400" />
+                Browse freely - you only sign in when you're ready to order
+              </div>
+            </Card>
+          )}
+
+          {step === 'in-zone' && matchedZone && (
+            <Card className="rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-[0_28px_60px_-40px_rgba(15,23,42,0.18)] md:p-7">
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-brand-50">
+                  <CheckCircle2 className="text-brand-600" size={34} />
+                </div>
+                <div>
+                  <p className="section-kicker text-[11px] font-bold text-brand-600">Available now</p>
+                  <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.05em] text-slate-950">Great news</h2>
+                  <p className="mt-3 text-base leading-8 text-slate-500">
+                    We deliver to <span className="font-semibold text-brand-700">{matchedZone.name}</span>.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 rounded-2xl bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-700">
+                  <Clock3 size={16} />
+                  Estimated delivery: {matchedZone.estimatedMinutes}-{matchedZone.estimatedMinutes + 15} min
+                </div>
+                <Button size="lg" fullWidth className="mt-2 rounded-2xl" onClick={handleContinue}>
+                  Start shopping
+                </Button>
+              </div>
+            </Card>
+          )}
+
+          {step === 'out-of-zone' && (
+            <Card className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_28px_60px_-40px_rgba(15,23,42,0.18)] md:p-7">
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col items-center gap-3 text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-slate-100">
+                    <MapPin className="text-slate-500" size={28} />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-extrabold tracking-[-0.05em] text-slate-950">Not quite there yet</h2>
+                    <p className="mt-3 text-base leading-8 text-slate-500">
+                      We don&apos;t deliver to <span className="font-semibold text-slate-700">{enteredPostcode}</span> yet.
+                      Leave your details and we&apos;ll let you know when we expand.
+                    </p>
+                  </div>
+                </div>
+
+                <form onSubmit={waitlistForm.handleSubmit(handleWaitlistSubmit)} className="flex flex-col gap-3" noValidate>
+                  <Input
+                    label="Your name"
+                    placeholder="Amara"
+                    {...waitlistForm.register('name')}
+                    error={waitlistForm.formState.errors.name?.message}
+                  />
+                  <Input
+                    label="Email address"
+                    type="email"
+                    placeholder="amara@example.com"
+                    {...waitlistForm.register('email')}
+                    error={waitlistForm.formState.errors.email?.message}
+                  />
+                  <Button
+                    type="submit"
+                    size="lg"
+                    fullWidth
+                    loading={waitlistForm.formState.isSubmitting}
+                    className="rounded-2xl"
+                  >
+                    Join waitlist
+                  </Button>
+                </form>
+              </div>
+            </Card>
+          )}
+
+          {step === 'waitlisted' && (
+            <Card className="rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-[0_28px_60px_-40px_rgba(15,23,42,0.18)] md:p-7">
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-brand-50">
+                  <CheckCircle2 className="text-brand-600" size={34} />
+                </div>
+                <h2 className="text-3xl font-extrabold tracking-[-0.05em] text-slate-950">You&apos;re on the list</h2>
+                <p className="text-base leading-8 text-slate-500">
+                  We&apos;ll email you as soon as delivery opens up in your area.
+                </p>
+              </div>
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   )
