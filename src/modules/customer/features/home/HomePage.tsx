@@ -1,11 +1,23 @@
 import { type ReactNode, useState } from 'react'
 import { ArrowRight, Clock3, MapPin, Search, Sparkles, Star } from 'lucide-react'
+import { MOCK_PRODUCTS } from '@modules/customer/features/catalogue/mock'
 import { useLocationStore } from '@shared/stores/location.store'
 import { cn } from '@shared/lib/utils'
 import { StoreCard } from './components/StoreCard'
 import { MOCK_STORES } from './mock'
 
 const ALL_TAGS = [...new Set(MOCK_STORES.flatMap(store => store.categoryTags))]
+const STORE_SEARCH_TERMS = Object.fromEntries(
+  MOCK_STORES.map(store => [
+    store.id,
+    [
+      store.name,
+      store.area,
+      ...store.categoryTags,
+      ...(MOCK_PRODUCTS[store.id] ?? []).flatMap(product => [product.name, product.category, product.hint]),
+    ].map(value => value.toLowerCase()),
+  ])
+)
 
 const CATEGORY_ACCENTS = [
   'from-[#eef8f1] to-[#f8fcfa]',
@@ -20,11 +32,11 @@ export function HomePage() {
   const deliveryArea = useLocationStore(s => s.deliveryArea)
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState<string | null>(null)
+  const normalizedQuery = query.trim().toLowerCase()
 
   const filtered = MOCK_STORES.filter(store => {
-    const matchesQuery = query.trim()
-      ? store.name.toLowerCase().includes(query.toLowerCase()) ||
-        store.categoryTags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    const matchesQuery = normalizedQuery
+      ? STORE_SEARCH_TERMS[store.id]?.some(term => term.includes(normalizedQuery))
       : true
     const matchesTag = activeTag ? store.categoryTags.includes(activeTag) : true
     return matchesQuery && matchesTag
