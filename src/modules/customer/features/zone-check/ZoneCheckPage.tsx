@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckCircle2, Clock3, MapPin, Store } from 'lucide-react'
+import { CheckCircle2, Clock3, MapPin } from 'lucide-react'
 import { BrandIcon } from '@shared/components/Logo'
 import { Input } from '@shared/components/Input'
 import { Button } from '@shared/components/Button'
@@ -102,11 +102,6 @@ export function ZoneCheckPage() {
                   Check delivery
                 </Button>
               </form>
-
-              <div className="mt-6 flex items-center gap-2 border-t border-slate-100 pt-5 text-sm text-slate-400">
-                <Store size={15} className="shrink-0 text-slate-400" />
-                Browse freely - you only sign in when you're ready to order
-              </div>
             </Card>
           )}
 
