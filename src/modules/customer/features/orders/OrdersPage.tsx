@@ -5,7 +5,7 @@ import { useAuthStore } from '@shared/stores/auth.store'
 import { cn, formatCurrency, formatDate } from '@shared/lib/utils'
 import { MOCK_STORES } from '@modules/customer/features/home/mock'
 import { MOCK_ORDERS } from './mock'
-import { OrderStatusBadge } from './OrderStatusBadge'
+import { OrderStatusBadge } from '@shared/components/OrderStatusBadge'
 import { useReorder } from './useReorder'
 
 export function OrdersPage() {

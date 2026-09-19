@@ -3,7 +3,7 @@ import { ArrowLeft, Clock, MapPin } from 'lucide-react'
 import { Button } from '@shared/components/Button'
 import { cn, formatCurrency, formatDate } from '@shared/lib/utils'
 import { getOrder } from './mock'
-import { OrderStatusBadge } from './OrderStatusBadge'
+import { OrderStatusBadge } from '@shared/components/OrderStatusBadge'
 import { useReorder } from './useReorder'
 
 export function OrderDetailPage() {

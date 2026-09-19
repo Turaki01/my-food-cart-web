@@ -15,6 +15,40 @@ const peckhamAddress = { id: 'addr-1', line1: '12 Rye Lane', postcode: 'SE15 4RH
 
 export const MOCK_ORDERS: Order[] = [
   {
+    id: 'o6',
+    orderNumber: 'MFC-3QW9ZK',
+    storeId: '1',
+    storeName: MOCK_STORES[0].name,
+    items: [
+      { product: find(store1, 'p7'), quantity: 1 },
+      { product: find(store1, 'p14'), quantity: 1 },
+    ],
+    deliveryAddress: peckhamAddress,
+    deliverySlot: 'Today, 7–9pm',
+    subtotal: 249 + 899,
+    deliveryFee: 349,
+    total: 249 + 899 + 349,
+    status: 'confirmed',
+    createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+  },
+  {
+    id: 'o5',
+    orderNumber: 'MFC-7YB4MX',
+    storeId: '1',
+    storeName: MOCK_STORES[0].name,
+    items: [
+      { product: find(store1, 'p4'), quantity: 2 },
+      { product: find(store1, 'p12'), quantity: 1 },
+    ],
+    deliveryAddress: peckhamAddress,
+    deliverySlot: 'Today, 5–7pm',
+    subtotal: 249 * 2 + 1299,
+    deliveryFee: 349,
+    total: 249 * 2 + 1299 + 349,
+    status: 'being_picked',
+    createdAt: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
+  },
+  {
     id: 'o4',
     orderNumber: 'MFC-J8K2LP',
     storeId: '1',
