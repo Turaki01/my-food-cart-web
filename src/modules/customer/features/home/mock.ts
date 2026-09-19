@@ -14,7 +14,7 @@ export const MOCK_STORES: MockStore[] = [
     estimatedDeliveryMax: 60,
     minimumOrderValue: 2000,
     isOpen: true,
-    coverGradient: 'from-orange-400 to-red-500',
+    coverGradient: 'from-spice-400 to-spice-600',
   },
   {
     id: '2',
@@ -25,7 +25,7 @@ export const MOCK_STORES: MockStore[] = [
     estimatedDeliveryMax: 65,
     minimumOrderValue: 2500,
     isOpen: true,
-    coverGradient: 'from-purple-500 to-indigo-600',
+    coverGradient: 'from-brand-500 to-brand-800',
   },
   {
     id: '3',
@@ -36,7 +36,7 @@ export const MOCK_STORES: MockStore[] = [
     estimatedDeliveryMax: 70,
     minimumOrderValue: 2000,
     isOpen: false,
-    coverGradient: 'from-emerald-400 to-green-700',
+    coverGradient: 'from-stone-400 to-stone-600',
   },
   {
     id: '4',
@@ -47,6 +47,6 @@ export const MOCK_STORES: MockStore[] = [
     estimatedDeliveryMax: 75,
     minimumOrderValue: 3000,
     isOpen: true,
-    coverGradient: 'from-amber-400 to-yellow-600',
+    coverGradient: 'from-amber-500 to-amber-700',
   },
 ]
