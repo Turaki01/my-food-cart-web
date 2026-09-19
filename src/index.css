@@ -5,17 +5,17 @@
 @layer base {
   :root {
     color-scheme: light;
-    --paper: #faf6ef;
+    --paper: #fafafa;
     --paper-strong: #ffffff;
-    --paper-deep: #f1ece0;
-    --ink: #1c1a16;
-    --muted: #746c5d;
-    --olive: #175c47;
-    --olive-soft: #2c7a62;
-    --amber: #1A6B3A;
-    --amber-soft: #dff2e6;
-    --line: rgba(28, 26, 22, 0.12);
-    --line-strong: rgba(28, 26, 22, 0.2);
+    --paper-deep: #f3f4f6;
+    --ink: #111827;
+    --muted: #6b7280;
+    --olive: #047857;
+    --olive-soft: #059669;
+    --amber: #059669;
+    --amber-soft: #d1fae5;
+    --line: rgba(17, 24, 39, 0.1);
+    --line-strong: rgba(17, 24, 39, 0.16);
   }
 
   *,
@@ -42,7 +42,7 @@
   }
 
   ::selection {
-    background: rgba(26, 107, 58, 0.18);
+    background: rgba(5, 150, 105, 0.18);
     color: var(--ink);
   }
 
@@ -54,10 +54,6 @@
 @layer utilities {
   .scrollbar-none::-webkit-scrollbar { display: none; }
   .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
-
-  .font-display {
-    font-optical-sizing: auto;
-  }
 
   .paper-panel {
     background: var(--paper-strong);

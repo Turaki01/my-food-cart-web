@@ -29,7 +29,7 @@ export function BrandIcon({ size = 36, className }: { size?: number; className?:
       className={className}
       aria-hidden="true"
     >
-      <rect width="512" height="512" rx="96" fill="#1A6B3A" />
+      <rect width="512" height="512" rx="96" fill="#059669" />
       <g
         transform="translate(256,256)"
         fill="none"
@@ -42,7 +42,7 @@ export function BrandIcon({ size = 36, className }: { size?: number; className?:
         <path d="M-100,-80 L-80,20 L100,20" />
         <circle cx="-40" cy="110" r="18" fill="white" stroke="none" />
         <circle cx="80" cy="110" r="18" fill="white" stroke="none" />
-        <path d="M40,-60 Q80,-100 120,-60 Q80,-20 40,-60Z" fill="#4bbd78" stroke="none" />
+        <path d="M40,-60 Q80,-100 120,-60 Q80,-20 40,-60Z" fill="#34d399" stroke="none" />
       </g>
     </svg>
   )

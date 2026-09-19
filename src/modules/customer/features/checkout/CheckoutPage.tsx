@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeft, ArrowRight, Clock3, MapPin } from 'lucide-react'
 import { cn } from '@shared/lib/utils'
 import { Input } from '@shared/components/Input'
+import { Button } from '@shared/components/Button'
+import { Badge } from '@shared/components/Badge'
 import { useCartStore, cartSubtotal } from '@shared/stores/cart.store'
 import { useAuthStore } from '@shared/stores/auth.store'
 import { useLocationStore } from '@shared/stores/location.store'
@@ -62,22 +64,19 @@ export function CheckoutPage() {
     <div className="mx-auto max-w-5xl">
       <Link
         to={storeId ? `/customer/store/${storeId}` : '/customer/cart'}
-        className="mb-6 inline-flex items-center gap-1.5 text-xs text-gray-500 transition-colors hover:text-gray-800"
+        className="underline-hover mb-6 inline-flex items-center gap-1.5 text-xs font-semibold text-ink/55 transition-colors hover:text-ink"
       >
         <ArrowLeft size={13} />
         Back to {storeName}
       </Link>
 
-      <div className="mb-6 flex items-end justify-between gap-4">
+      <div className="mb-6 flex items-end justify-between gap-4 border-b border-ink/10 pb-6">
         <div>
-          <p className="section-kicker text-[11px] font-bold text-brand-600">Checkout</p>
-          <h1 className="mt-1 text-xl font-extrabold tracking-[-0.04em] text-slate-900">Delivery details</h1>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="section-kicker text-[11px] font-semibold text-ink/45">Checkout · Step 1 of 2</p>
+          <h1 className="mt-2 font-display text-2xl font-medium tracking-[-0.01em] text-ink">Delivery details</h1>
+          <p className="mt-2 text-sm text-ink/55">
             Add your address and choose a time slot before you move to payment.
           </p>
-        </div>
-        <div className="hidden items-center gap-2 rounded-full bg-brand-50 px-3 py-2 text-xs font-semibold text-brand-700 sm:flex">
-          Step 1 of 2
         </div>
       </div>
 
@@ -88,13 +87,13 @@ export function CheckoutPage() {
               <div className="space-y-3">
                 <Input
                   label="Street address"
-                  placeholder="12 Rye Lane"
+                  placeholder="Enter street address"
                   error={errors.line1?.message}
                   {...register('line1')}
                 />
                 <Input
                   label="Flat / floor (optional)"
-                  placeholder="Flat 3"
+                  placeholder="Enter flat or floor"
                   {...register('line2')}
                 />
                 <Input
@@ -127,64 +126,61 @@ export function CheckoutPage() {
             <FormSection title="Delivery note" optional>
               <textarea
                 rows={2}
-                placeholder="e.g. Leave at door, ring bell twice..."
+                placeholder="Enter delivery instructions"
                 {...register('deliveryNote')}
-                className="w-full resize-none rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 transition-all placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-600/20"
+                className="w-full resize-none rounded-lg border border-ink/15 bg-white px-4 py-3 text-sm text-ink transition-colors placeholder:text-ink/35 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/20"
               />
             </FormSection>
           </div>
 
-          <div className="sticky top-20">
-            <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white">
-              <div className="border-b border-gray-50 px-5 py-4">
-                <h3 className="text-sm font-semibold text-gray-900">Order summary</h3>
-                <p className="mt-0.5 text-xs text-gray-400">
+          <div className="sticky top-24">
+            <div className="rounded-xl border border-ink/10 bg-white shadow-sm">
+              <div className="border-b border-ink/10 px-5 py-4">
+                <p className="section-kicker text-[11px] font-semibold text-ink/45">Order summary</p>
+                <h3 className="mt-1 font-display text-lg font-medium text-ink">
                   {items.length} item{items.length !== 1 ? 's' : ''} · {storeName}
-                </p>
+                </h3>
               </div>
 
               <div className="max-h-52 space-y-2 overflow-y-auto px-5 py-3">
                 {items.map(({ product, quantity }) => (
                   <div key={product.id} className="flex items-center justify-between gap-3">
-                    <span className="truncate text-xs leading-snug text-gray-600">
+                    <span className="truncate text-xs leading-snug text-ink/60">
                       {quantity} × {product.name}
                     </span>
-                    <span className="shrink-0 text-xs font-medium tabular-nums text-gray-900">
+                    <span className="tabular shrink-0 text-xs font-medium text-ink">
                       £{((product.price * quantity) / 100).toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-2 border-t border-gray-50 px-5 pb-4 pt-3">
+              <div className="space-y-2 border-t border-ink/10 px-5 pb-4 pt-3">
                 <SummaryRow label="Subtotal" value={`£${(subtotal / 100).toFixed(2)}`} />
                 <SummaryRow label="Delivery" value={`£${(deliveryFee / 100).toFixed(2)}`} />
-                <div className="border-t border-gray-100 pt-2">
+                <div className="border-t border-ink/10 pt-2">
                   <SummaryRow label="Total" value={`£${(total / 100).toFixed(2)}`} bold />
                 </div>
               </div>
 
-              <div className="px-4 pb-4">
-                <button
-                  type="submit"
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
-                >
-                  Continue to payment <ArrowRight size={14} />
-                </button>
-                <p className="mt-2 text-center text-[11px] text-gray-400">
+              <div className="px-5 pb-5">
+                <Button type="submit" fullWidth>
+                  Continue to payment <ArrowRight size={14} className="ml-1.5" />
+                </Button>
+                <p className="mt-2 text-center text-[11px] text-ink/40">
                   Payment comes next on a separate secure checkout step
                 </p>
               </div>
             </div>
 
             {store && (
-              <div className="mt-3 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-[11px] text-gray-500">
+              <div className="mt-3 rounded-xl border border-ink/10 bg-white px-4 py-3 text-[11px] text-ink/55 shadow-sm">
                 <p className="flex items-center gap-2">
-                  <MapPin size={12} className="text-gray-400" />
+                  <MapPin size={12} className="text-ink/40" />
                   {deliveryArea ? `Delivering to ${deliveryArea}` : 'Delivery area confirmed'}
                 </p>
                 <p className="mt-2 flex items-center gap-2">
-                  <Clock3 size={12} className="text-gray-400" />
+                  <Clock3 size={12} className="text-ink/40" />
                   Est. {store.estimatedDeliveryMin}-{store.estimatedDeliveryMax} min after cutoff
                 </p>
               </div>
@@ -208,14 +204,10 @@ function FormSection({
   children: React.ReactNode
 }) {
   return (
-    <div className="rounded-3xl border border-gray-100 bg-white px-5 py-5">
+    <div className="rounded-xl border border-ink/10 bg-white px-6 py-6 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
-        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-        {optional && (
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-400">
-            Optional
-          </span>
-        )}
+        <h3 className="font-display text-lg font-medium text-ink">{title}</h3>
+        {optional && <Badge variant="gray">Optional</Badge>}
       </div>
       {children}
       {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
@@ -237,25 +229,21 @@ function SlotCard({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-2xl border px-3.5 py-3 text-left transition-all duration-150',
-        selected
-          ? 'border-brand-600 bg-brand-50 ring-1 ring-brand-600'
-          : 'border-gray-200 bg-white hover:border-brand-300'
+        'rounded-lg border px-3.5 py-3 text-left transition-colors duration-150',
+        selected ? 'border-brand-600 bg-brand-600 text-white' : 'border-ink/15 hover:border-brand-300 hover:bg-brand-50/40'
       )}
     >
-      <p className={cn('text-xs font-semibold leading-snug', selected ? 'text-brand-700' : 'text-gray-900')}>
-        {slot.label}
-      </p>
-      <p className="mt-0.5 text-[10px] text-gray-400">{slot.sublabel}</p>
+      <p className="text-xs font-semibold leading-snug">{slot.label}</p>
+      <p className={cn('mt-0.5 text-[10px]', selected ? 'text-white/70' : 'text-ink/40')}>{slot.sublabel}</p>
     </button>
   )
 }
 
 function SummaryRow({ label, value, bold = false }: { label: string; value: string; bold?: boolean }) {
   return (
-    <div className={cn('flex justify-between', bold ? 'text-sm font-semibold text-gray-900' : 'text-xs text-gray-500')}>
+    <div className={cn('flex justify-between', bold ? 'text-sm font-semibold text-ink' : 'text-xs text-ink/55')}>
       <span>{label}</span>
-      <span className="tabular-nums">{value}</span>
+      <span className="tabular">{value}</span>
     </div>
   )
 }

@@ -40,17 +40,15 @@ export function CategoryNav({ categories }: CategoryNavProps) {
   }
 
   return (
-    <div className="-mx-5 overflow-x-auto px-5 py-2 scrollbar-none md:-mx-6 md:px-6">
-      <div className="flex w-max gap-2">
+    <div className="sticky top-0 z-10 -mx-5 border-y border-ink/10 bg-white px-5 py-3 shadow-sm scrollbar-none md:-mx-6 md:px-6">
+      <div className="flex w-max gap-6 overflow-x-auto scrollbar-none">
         {categories.map(category => (
           <button
             key={category}
             onClick={() => scrollToCategory(category)}
             className={cn(
-              'rounded-full border px-4 py-2 text-xs font-semibold transition-all',
-              active === category
-                ? 'border-brand-200 bg-brand-50 text-brand-700'
-                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-900'
+              'shrink-0 whitespace-nowrap border-b-2 pb-0.5 text-xs font-semibold uppercase tracking-[0.06em] transition-colors',
+              active === category ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink/45 hover:text-ink/70'
             )}
           >
             {category}

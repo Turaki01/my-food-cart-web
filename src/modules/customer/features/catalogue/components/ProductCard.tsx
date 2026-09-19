@@ -1,6 +1,7 @@
 import { Minus, Plus } from 'lucide-react'
 import { cn } from '@shared/lib/utils'
 import { useCartStore } from '@shared/stores/cart.store'
+import { Badge } from '@shared/components/Badge'
 import type { MockProduct } from '../mock'
 
 interface ProductCardProps {
@@ -23,65 +24,62 @@ export function ProductCard({ product, storeId, storeName, deliveryFee, onConfli
   return (
     <article
       className={cn(
-        'overflow-hidden rounded-[1.6rem] border border-slate-200 bg-white shadow-[0_20px_40px_-34px_rgba(15,23,42,0.18)] transition-all',
-        product.inStock ? 'hover:-translate-y-0.5 hover:border-slate-300' : 'opacity-60'
+        'group overflow-hidden rounded-xl border border-ink/10 bg-white shadow-sm transition-shadow',
+        product.inStock ? 'hover:shadow-md' : 'opacity-50'
       )}
     >
-      <div className={cn('relative aspect-square border-b border-slate-100', getProductTone(product.category))}>
+      <div className="relative aspect-square border-b border-ink/10 bg-gray-50">
         {product.imageUrl ? (
-          <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
         ) : (
           <div className="flex h-full flex-col justify-between p-4">
-            <span className="w-fit rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-600">
-              {product.category}
-            </span>
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Pantry staple</p>
-              <p className="mt-2 text-2xl font-extrabold tracking-[-0.04em] text-slate-900">{product.hint}</p>
-            </div>
+            <span className="section-kicker text-[10px] font-semibold text-ink/40">{product.category}</span>
+            <p className="font-display text-xl font-medium leading-tight text-ink/70">{product.hint}</p>
           </div>
         )}
 
         {!product.inStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/45">
-            <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-[10px] font-semibold text-slate-500">
-              Out of stock
-            </span>
+          <div className="absolute inset-0 flex items-center justify-center bg-[--paper]/90">
+            <Badge variant="gray">Out of stock</Badge>
           </div>
         )}
       </div>
 
       <div className="p-4">
         <div className="mb-3">
-          <h4 className="text-sm font-bold leading-snug text-slate-900">{product.name}</h4>
-          <p className="mt-1 text-xs text-slate-500">{product.unit}</p>
+          <h4 className="text-sm font-semibold leading-snug text-ink">{product.name}</h4>
+          <p className="mt-1 text-xs text-ink/50">{product.unit}</p>
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-lg font-extrabold tracking-[-0.03em] text-slate-900">
+          <span className="tabular font-display text-lg font-medium text-ink">
             £{(product.price / 100).toFixed(2)}
           </span>
 
           {!product.inStock ? null : quantity === 0 ? (
             <button
               onClick={handleAdd}
-              className="rounded-full bg-brand-600 px-3.5 py-1.5 text-xs font-bold text-white transition-colors hover:bg-brand-700"
+              className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
             >
               Add
             </button>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={() => updateQuantity(product.id, quantity - 1)}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition-colors hover:border-slate-300"
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-ink/15 text-ink/70 transition-colors hover:border-brand-600 hover:text-brand-600"
                 aria-label="Decrease quantity"
               >
                 <Minus size={11} />
               </button>
-              <span className="w-4 text-center text-sm font-bold text-slate-900 tabular-nums">{quantity}</span>
+              <span className="tabular w-4 text-center text-sm font-semibold text-ink">{quantity}</span>
               <button
                 onClick={() => updateQuantity(product.id, quantity + 1)}
-                className="flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition-colors hover:border-slate-300"
+                className="flex h-7 w-7 items-center justify-center rounded-md border border-ink/15 text-ink/70 transition-colors hover:border-brand-600 hover:text-brand-600"
                 aria-label="Increase quantity"
               >
                 <Plus size={11} />
@@ -92,10 +90,4 @@ export function ProductCard({ product, storeId, storeName, deliveryFee, onConfli
       </div>
     </article>
   )
-}
-
-function getProductTone(category: string) {
-  if (category.toLowerCase().includes('fresh')) return 'bg-[linear-gradient(135deg,#eefaf1,#fdfef8)]'
-  if (category.toLowerCase().includes('frozen')) return 'bg-[linear-gradient(135deg,#edf5ff,#fafcff)]'
-  return 'bg-[linear-gradient(135deg,#fff4ea,#fffaf4)]'
 }

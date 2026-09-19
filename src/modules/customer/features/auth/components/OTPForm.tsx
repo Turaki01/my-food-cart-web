@@ -36,8 +36,8 @@ export function OTPForm({ phone, onSubmit, onResend }: OTPFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
-      <p className="text-sm text-gray-500 text-center">
-        We sent a 6-digit code to <span className="font-medium text-gray-900">{phone}</span>
+      <p className="text-sm text-ink/55 text-center">
+        We sent a 6-digit code to <span className="font-semibold text-ink">{phone}</span>
       </p>
 
       <div className="flex flex-col items-center gap-3">
@@ -63,12 +63,12 @@ export function OTPForm({ phone, onSubmit, onResend }: OTPFormProps) {
 
       <div className="text-center">
         {resendCountdown > 0 ? (
-          <p className="text-sm text-gray-400">Resend code in {resendCountdown}s</p>
+          <p className="text-sm text-ink/40">Resend code in {resendCountdown}s</p>
         ) : (
           <button
             type="button"
             onClick={handleResend}
-            className="text-sm font-medium text-brand-600 hover:underline"
+            className="text-sm font-semibold text-brand-600 hover:text-brand-700"
           >
             Resend code
           </button>

@@ -64,10 +64,10 @@ export function OTPInput({ value = '', onChange, length = 6, error }: OTPInputPr
           onKeyDown={e => handleKeyDown(i, e)}
           aria-label={`Digit ${i + 1}`}
           className={cn(
-            'w-12 h-14 rounded-2xl border-2 text-center text-xl font-semibold text-gray-900',
-            'focus:outline-none focus:border-brand-600 transition-colors duration-150',
-            digit ? 'border-brand-600 bg-brand-50' : 'border-gray-200 bg-white',
-            error && 'border-red-400 bg-red-50 shake'
+            'w-12 h-14 rounded-lg border text-center text-xl font-display font-semibold text-ink bg-white shadow-sm',
+            'focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 transition-colors duration-150',
+            digit ? 'border-brand-600' : 'border-ink/15',
+            error && 'border-red-400 ring-2 ring-red-500/20 shake'
           )}
         />
       ))}

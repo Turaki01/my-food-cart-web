@@ -21,8 +21,8 @@ export function StoreCard({ store }: StoreCardProps) {
       onClick={handleClick}
       onKeyDown={event => event.key === 'Enter' && handleClick()}
       className={cn(
-        'group overflow-hidden rounded-lg border border-ink/10 bg-[var(--paper-strong)] transition-colors',
-        store.isOpen ? 'cursor-pointer hover:border-ink/30' : 'opacity-50'
+        'group overflow-hidden rounded-xl border border-ink/10 bg-white shadow-sm transition-shadow',
+        store.isOpen ? 'cursor-pointer hover:shadow-md' : 'opacity-50'
       )}
     >
       <div className={cn('relative flex h-36 items-center justify-center overflow-hidden bg-gradient-to-br', store.coverGradient)}>

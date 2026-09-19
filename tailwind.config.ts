@@ -6,16 +6,16 @@ export default {
     extend: {
       colors: {
         brand: {
-          50:  '#f0faf4',
-          100: '#dcf5e5',
-          200: '#b9eacb',
-          300: '#85d8a4',
-          400: '#4bbd78',
-          500: '#25a057',
-          600: '#1A6B3A',
-          700: '#155a31',
-          800: '#114828',
-          900: '#0d3a20',
+          50:  '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
         },
         spice: {
           50:  '#fdf5ed',
@@ -30,15 +30,15 @@ export default {
           900: '#622d15',
         },
         surface: {
-          DEFAULT: '#faf6ef',
+          DEFAULT: '#fafafa',
           card:    '#ffffff',
-          ink:     '#1c1a16',
+          ink:     '#111827',
         },
-        ink: '#1c1a16',
+        ink: '#111827',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Fraunces', 'Georgia', 'serif'],
+        display: ['Geist', 'Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         sm:      '3px',

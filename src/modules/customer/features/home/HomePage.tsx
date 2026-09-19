@@ -43,37 +43,34 @@ export function HomePage() {
   }))
 
   return (
-    <div className="space-y-14 md:space-y-20">
+    <div className="space-y-8">
       <HeroBanner deliveryArea={deliveryArea} openCount={openCount} onCheckArea={() => navigate('/customer/zone-check')} />
 
-      <section className="space-y-7 border-b border-ink/10 pb-14 md:pb-20">
-        <div className="flex items-end justify-between gap-4">
+      <section className="rounded-xl border border-ink/10 bg-white p-6 shadow-sm md:p-7">
+        <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <p className="section-kicker text-[11px] font-semibold text-ink/45">01 — Departments</p>
+            <p className="section-kicker text-[11px] font-semibold text-brand-600">Departments</p>
             <h2 className="mt-2 font-display text-2xl font-medium tracking-[-0.01em] text-ink md:text-3xl">
               Shop by what you need
             </h2>
           </div>
-          <button className="underline-hover shrink-0 text-sm font-semibold text-ink/60 hover:text-ink">
+          <button className="shrink-0 text-sm font-semibold text-brand-600 hover:text-brand-700">
             View all
           </button>
         </div>
 
-        <div className="grid grid-cols-2 border-l border-t border-ink/10 sm:grid-cols-3 xl:grid-cols-6">
-          {featuredCategories.map(({ tag, count }, index) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+          {featuredCategories.map(({ tag, count }) => (
             <button
               key={tag}
               onClick={() => setActiveTag(tag === activeTag ? null : tag)}
               className={cn(
-                'border-b border-r border-ink/10 p-5 text-left transition-colors',
-                activeTag === tag ? 'bg-ink' : 'hover:bg-ink/[0.03]'
+                'rounded-lg border p-4 text-left transition-colors',
+                activeTag === tag ? 'border-brand-600 bg-brand-600 text-white' : 'border-ink/10 hover:border-brand-300 hover:bg-brand-50/40'
               )}
             >
-              <span className={cn('tabular font-display text-2xl font-medium', activeTag === tag ? 'text-[var(--paper)]' : 'text-ink/25')}>
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <p className={cn('mt-4 text-sm font-semibold', activeTag === tag ? 'text-[var(--paper)]' : 'text-ink')}>{tag}</p>
-              <p className={cn('mt-1 text-xs', activeTag === tag ? 'text-[var(--paper)]/65' : 'text-ink/45')}>
+              <p className={cn('text-sm font-semibold', activeTag === tag ? 'text-white' : 'text-ink')}>{tag}</p>
+              <p className={cn('mt-1 text-xs', activeTag === tag ? 'text-white/70' : 'text-ink/45')}>
                 {count} partner stores
               </p>
             </button>
@@ -81,10 +78,10 @@ export function HomePage() {
         </div>
       </section>
 
-      <section id="stores-near-you" className="scroll-mt-24">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <section id="stores-near-you" className="scroll-mt-24 rounded-xl border border-ink/10 bg-white p-6 shadow-sm md:p-7">
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="section-kicker text-[11px] font-semibold text-ink/45">02 — Popular stores</p>
+            <p className="section-kicker text-[11px] font-semibold text-brand-600">Popular stores</p>
             <h2 className="mt-2 font-display text-2xl font-medium tracking-[-0.01em] text-ink md:text-3xl">
               Stores near you
             </h2>
@@ -93,20 +90,20 @@ export function HomePage() {
               {deliveryArea ? ` to ${deliveryArea}` : ''}
             </p>
           </div>
-          <button className="underline-hover shrink-0 text-sm font-semibold text-ink/60 hover:text-ink">
+          <button className="shrink-0 text-sm font-semibold text-brand-600 hover:text-brand-700">
             View all
           </button>
         </div>
 
-        <div className="mb-8 flex flex-col gap-5 border-y border-ink/10 py-5 md:flex-row md:items-center md:justify-between">
+        <div className="mb-6 flex flex-col gap-5 border-t border-ink/10 pt-5 md:flex-row md:items-center md:justify-between">
           <div className="relative w-full md:max-w-xs">
-            <Search size={14} className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-ink/35" />
+            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink/35" />
             <input
               type="search"
               placeholder="Search for food, stores, cuisines…"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              className="w-full border-b border-ink/15 bg-transparent py-1.5 pl-6 text-sm text-ink placeholder:text-ink/35 focus:border-ink/50 focus:outline-none"
+              className="w-full rounded-lg border border-ink/15 bg-gray-50 py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-brand-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-600/20"
             />
           </div>
 
@@ -125,7 +122,7 @@ export function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center border border-ink/10 py-16 text-ink/50">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-ink/10 bg-gray-50 py-16 text-ink/50">
             <Search size={22} className="mb-2 opacity-40" />
             <p className="text-sm">No stores match your filters</p>
             <button
@@ -133,7 +130,7 @@ export function HomePage() {
                 setQuery('')
                 setActiveTag(null)
               }}
-              className="underline-hover mt-1.5 text-xs font-semibold text-brand-700"
+              className="mt-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700"
             >
               Clear filters
             </button>
@@ -154,14 +151,14 @@ function HeroBanner({
   onCheckArea: () => void
 }) {
   return (
-    <section className="grid gap-10 border-b border-ink/10 pb-14 lg:grid-cols-12 lg:gap-10 lg:pb-20">
+    <section className="grid gap-6 rounded-xl border border-ink/10 bg-white p-7 shadow-sm lg:grid-cols-12 lg:gap-10 lg:p-10">
       <div className="lg:col-span-7">
-        <p className="section-kicker text-[11px] font-semibold text-ink/45">
+        <p className="section-kicker text-[11px] font-semibold text-brand-600">
           {deliveryArea ? `Delivering to ${deliveryArea}` : 'South London grocery market'}
         </p>
 
-        <h1 className="mt-5 max-w-xl font-display text-[2.5rem] font-medium leading-[1.04] tracking-[-0.02em] text-ink md:text-6xl lg:text-[4rem]">
-          Groceries for the meals you <em className="text-brand-700">actually</em> cook.
+        <h1 className="mt-5 max-w-xl font-display text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.02em] text-ink md:text-6xl lg:text-[4rem]">
+          Groceries for the meals you <span className="text-brand-600">actually</span> cook.
         </h1>
 
         <p className="mt-6 max-w-md text-[15px] leading-7 text-ink/60">
@@ -171,11 +168,11 @@ function HeroBanner({
         <div className="mt-8 flex flex-wrap items-center gap-6">
           <a
             href="#stores-near-you"
-            className="inline-flex items-center gap-2 bg-ink px-6 py-3 text-sm font-semibold text-[var(--paper)] transition-colors hover:bg-brand-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
           >
             Order now <ArrowRight size={14} />
           </a>
-          <button onClick={onCheckArea} className="underline-hover flex items-center gap-1.5 text-sm font-semibold text-ink/70 hover:text-ink">
+          <button onClick={onCheckArea} className="flex items-center gap-1.5 text-sm font-semibold text-ink/70 hover:text-ink">
             <MapPin size={13} />
             {deliveryArea ?? 'Check delivery area'}
           </button>
@@ -189,12 +186,12 @@ function HeroBanner({
       </div>
 
       <div className="flex flex-col gap-6 lg:col-span-5">
-        <div className="relative flex min-h-[16rem] flex-1 flex-col justify-end overflow-hidden bg-brand-700 p-7 text-[var(--paper)]">
-          <p className="section-kicker text-[11px] font-semibold text-brand-200">Weekly pick</p>
+        <div className="relative flex min-h-[16rem] flex-1 flex-col justify-end overflow-hidden rounded-xl bg-brand-600 p-7 text-white">
+          <p className="section-kicker text-[11px] font-semibold text-brand-100">Weekly pick</p>
           <h3 className="mt-3 font-display text-3xl font-medium leading-[1.05] tracking-[-0.01em]">
             New-season produce &amp; freezer staples.
           </h3>
-          <p className="mt-3 max-w-[16rem] text-sm leading-6 text-brand-100/75">
+          <p className="mt-3 max-w-[16rem] text-sm leading-6 text-brand-50/80">
             The stores people come back to when it&rsquo;s time for a real pantry restock.
           </p>
         </div>
@@ -233,7 +230,7 @@ function TagTab({ label, active, onClick }: { label: string; active: boolean; on
       onClick={onClick}
       className={cn(
         'shrink-0 whitespace-nowrap border-b-2 pb-0.5 text-xs font-semibold uppercase tracking-[0.06em] transition-colors',
-        active ? 'border-ink text-ink' : 'border-transparent text-ink/45 hover:text-ink/70'
+        active ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink/45 hover:text-ink/70'
       )}
     >
       {label}
