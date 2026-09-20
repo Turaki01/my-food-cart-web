@@ -10,6 +10,9 @@ const PhoneEntryPage = lazy(() =>
 const OTPPage = lazy(() =>
   import('./features/auth/pages/OTPPage').then(m => ({ default: m.OTPPage }))
 )
+const WelcomeDetailsPage = lazy(() =>
+  import('./features/auth/pages/WelcomeDetailsPage').then(m => ({ default: m.WelcomeDetailsPage }))
+)
 const ZoneCheckPage = lazy(() =>
   import('./features/zone-check/ZoneCheckPage').then(m => ({ default: m.ZoneCheckPage }))
 )
@@ -31,11 +34,14 @@ const PaymentPage = lazy(() =>
 const OrderConfirmationPage = lazy(() =>
   import('./features/order-confirmation/OrderConfirmationPage').then(m => ({ default: m.OrderConfirmationPage }))
 )
-
-const PlaceholderPage = ({ label }: { label: string }) => (
-  <div className="flex items-center justify-center min-h-[50dvh] text-gray-400 text-sm">
-    {label} — coming soon
-  </div>
+const OrdersPage = lazy(() =>
+  import('./features/orders/OrdersPage').then(m => ({ default: m.OrdersPage }))
+)
+const OrderDetailPage = lazy(() =>
+  import('./features/orders/OrderDetailPage').then(m => ({ default: m.OrderDetailPage }))
+)
+const ProfilePage = lazy(() =>
+  import('./features/profile/ProfilePage').then(m => ({ default: m.ProfilePage }))
 )
 
 const fallback = (
@@ -48,6 +54,7 @@ export const customerRoutes: RouteObject[] = [
   // Auth screens (no layout chrome)
   { path: '/auth/phone', element: <Suspense fallback={fallback}><PhoneEntryPage /></Suspense> },
   { path: '/auth/otp',   element: <Suspense fallback={fallback}><OTPPage /></Suspense> },
+  { path: '/auth/welcome', element: <Suspense fallback={fallback}><WelcomeDetailsPage /></Suspense> },
   { path: '/customer/zone-check', element: <Suspense fallback={fallback}><ZoneCheckPage /></Suspense> },
 
   // Customer app (with layout)
@@ -55,8 +62,9 @@ export const customerRoutes: RouteObject[] = [
     element: <CustomerLayout />,
     children: [
       { path: '/customer/home',    element: <Suspense fallback={fallback}><HomePage /></Suspense> },
-      { path: '/customer/orders',  element: <PlaceholderPage label="Order history" /> },
-      { path: '/customer/profile', element: <PlaceholderPage label="Profile & settings" /> },
+      { path: '/customer/orders',  element: <Suspense fallback={fallback}><OrdersPage /></Suspense> },
+      { path: '/customer/orders/:orderNumber', element: <Suspense fallback={fallback}><OrderDetailPage /></Suspense> },
+      { path: '/customer/profile', element: <Suspense fallback={fallback}><ProfilePage /></Suspense> },
       { path: '/customer/cart',               element: <Suspense fallback={fallback}><CartPage /></Suspense> },
       { path: '/customer/checkout',           element: <Suspense fallback={fallback}><CheckoutPage /></Suspense> },
       { path: '/customer/payment',            element: <Suspense fallback={fallback}><PaymentPage /></Suspense> },

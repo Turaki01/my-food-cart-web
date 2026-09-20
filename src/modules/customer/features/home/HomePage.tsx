@@ -1,5 +1,6 @@
-import { type ReactNode, useState } from 'react'
-import { ArrowRight, Clock3, MapPin, Search, Sparkles, Star } from 'lucide-react'
+import { useState } from 'react'
+import { ArrowRight, MapPin, Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { MOCK_PRODUCTS } from '@modules/customer/features/catalogue/mock'
 import { useLocationStore } from '@shared/stores/location.store'
 import { cn } from '@shared/lib/utils'
@@ -19,16 +20,8 @@ const STORE_SEARCH_TERMS = Object.fromEntries(
   ])
 )
 
-const CATEGORY_ACCENTS = [
-  'from-[#eef8f1] to-[#f8fcfa]',
-  'from-[#edf7f3] to-[#f8fcfa]',
-  'from-[#eef4ff] to-[#f9fbff]',
-  'from-[#f3f6f4] to-[#fbfdfc]',
-  'from-[#eff7f0] to-[#fcfefc]',
-  'from-[#eff7ff] to-[#fbfdff]',
-] as const
-
 export function HomePage() {
+  const navigate = useNavigate()
   const deliveryArea = useLocationStore(s => s.deliveryArea)
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState<string | null>(null)
@@ -44,102 +37,100 @@ export function HomePage() {
 
   const openCount = filtered.filter(store => store.isOpen).length
 
-  const featuredCategories = ALL_TAGS.slice(0, 6).map((tag, index) => ({
+  const featuredCategories = ALL_TAGS.slice(0, 6).map(tag => ({
     tag,
     count: MOCK_STORES.filter(store => store.categoryTags.includes(tag)).length,
-    accent: CATEGORY_ACCENTS[index % CATEGORY_ACCENTS.length],
   }))
 
   return (
-    <div className="space-y-8 md:space-y-10">
-      <HeroBanner deliveryArea={deliveryArea} openCount={openCount} />
+    <div className="space-y-8">
+      <HeroBanner deliveryArea={deliveryArea} openCount={openCount} onCheckArea={() => navigate('/customer/zone-check')} />
 
-      <section className="space-y-4">
-        <div className="flex items-end justify-between">
+      <section className="rounded-xl border border-ink/10 bg-white p-6 shadow-sm md:p-7">
+        <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <p className="section-kicker text-[11px] font-bold text-brand-600">Categories</p>
-            <h2 className="mt-1 text-xl font-extrabold tracking-[-0.04em] text-slate-900 md:text-3xl">
+            <p className="section-kicker text-[11px] font-semibold text-brand-600">Departments</p>
+            <h2 className="mt-2 font-display text-2xl font-medium tracking-[-0.01em] text-ink md:text-3xl">
               Shop by what you need
             </h2>
           </div>
-          <button className="text-sm font-semibold text-slate-500 transition-colors hover:text-slate-900">
+          <button className="shrink-0 text-sm font-semibold text-brand-600 hover:text-brand-700">
             View all
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-          {featuredCategories.map(({ tag, count, accent }) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+          {featuredCategories.map(({ tag, count }) => (
             <button
               key={tag}
               onClick={() => setActiveTag(tag === activeTag ? null : tag)}
               className={cn(
-                'rounded-[1.6rem] border border-slate-200 bg-white p-4 text-left shadow-[0_18px_40px_-34px_rgba(15,23,42,0.14)] transition-all',
-                activeTag === tag
-                  ? 'border-brand-300 ring-2 ring-brand-100'
-                  : 'hover:-translate-y-0.5 hover:border-slate-300'
+                'rounded-lg border p-4 text-left transition-colors',
+                activeTag === tag ? 'border-brand-600 bg-brand-600 text-white' : 'border-ink/10 hover:border-brand-300 hover:bg-brand-50/40'
               )}
             >
-              <div className={cn('flex h-14 w-14 items-center justify-center rounded-[1.1rem] bg-gradient-to-br text-lg font-extrabold text-slate-900', accent)}>
-                {getCategoryMonogram(tag)}
-              </div>
-              <p className="mt-4 text-sm font-bold text-slate-900">{tag}</p>
-              <p className="mt-1 text-xs text-slate-500">{count} partner stores</p>
+              <p className={cn('text-sm font-semibold', activeTag === tag ? 'text-white' : 'text-ink')}>{tag}</p>
+              <p className={cn('mt-1 text-xs', activeTag === tag ? 'text-white/70' : 'text-ink/45')}>
+                {count} partner stores
+              </p>
             </button>
           ))}
         </div>
       </section>
 
-      <section id="stores-near-you" className="scroll-mt-24">
-        <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <section id="stores-near-you" className="scroll-mt-24 rounded-xl border border-ink/10 bg-white p-6 shadow-sm md:p-7">
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="section-kicker text-[11px] font-bold text-brand-600">Popular stores</p>
-            <h2 className="mt-1 text-xl font-extrabold tracking-[-0.04em] text-slate-900 md:text-3xl">
+            <p className="section-kicker text-[11px] font-semibold text-brand-600">Popular stores</p>
+            <h2 className="mt-2 font-display text-2xl font-medium tracking-[-0.01em] text-ink md:text-3xl">
               Stores near you
             </h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-ink/55">
               {openCount} partner {openCount === 1 ? 'store' : 'stores'} delivering
               {deliveryArea ? ` to ${deliveryArea}` : ''}
             </p>
           </div>
-          <button className="text-sm font-semibold text-slate-500 transition-colors hover:text-slate-900">
+          <button className="shrink-0 text-sm font-semibold text-brand-600 hover:text-brand-700">
             View all
           </button>
         </div>
 
-        <div className="paper-panel relative mb-6 rounded-[1.75rem] px-4 py-3 md:px-5">
-          <Search size={15} className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="search"
-            placeholder="Search for food, stores, cuisines..."
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            className="w-full rounded-full border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 shadow-sm shadow-slate-900/5 placeholder:text-slate-400 focus:border-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-100"
-          />
-        </div>
+        <div className="mb-6 flex flex-col gap-5 border-t border-ink/10 pt-5 md:flex-row md:items-center md:justify-between">
+          <div className="relative w-full md:max-w-xs">
+            <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink/35" />
+            <input
+              type="search"
+              placeholder="Search for food, stores, cuisines…"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              className="w-full rounded-lg border border-ink/15 bg-gray-50 py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-brand-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-600/20"
+            />
+          </div>
 
-        <div className="mb-4 flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          <TagPill label="All" active={activeTag === null} onClick={() => setActiveTag(null)} />
-          {ALL_TAGS.map(tag => (
-            <TagPill key={tag} label={tag} active={activeTag === tag} onClick={() => setActiveTag(tag === activeTag ? null : tag)} />
-          ))}
+          <div className="flex gap-6 overflow-x-auto pb-1 scrollbar-none">
+            <TagTab label="All" active={activeTag === null} onClick={() => setActiveTag(null)} />
+            {ALL_TAGS.map(tag => (
+              <TagTab key={tag} label={tag} active={activeTag === tag} onClick={() => setActiveTag(tag === activeTag ? null : tag)} />
+            ))}
+          </div>
         </div>
 
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {filtered.map(store => (
               <StoreCard key={store.id} store={store} />
             ))}
           </div>
         ) : (
-          <div className="paper-panel flex flex-col items-center justify-center rounded-[2rem] py-16 text-slate-500">
-            <Search size={28} className="mb-2 opacity-30" />
+          <div className="flex flex-col items-center justify-center rounded-lg border border-ink/10 bg-gray-50 py-16 text-ink/50">
+            <Search size={22} className="mb-2 opacity-40" />
             <p className="text-sm">No stores match your filters</p>
             <button
               onClick={() => {
                 setQuery('')
                 setActiveTag(null)
               }}
-              className="mt-1.5 text-xs font-semibold text-brand-600 hover:underline"
+              className="mt-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700"
             >
               Clear filters
             </button>
@@ -150,123 +141,99 @@ export function HomePage() {
   )
 }
 
-function HeroBanner({ deliveryArea, openCount }: { deliveryArea: string | null; openCount: number }) {
+function HeroBanner({
+  deliveryArea,
+  openCount,
+  onCheckArea,
+}: {
+  deliveryArea: string | null
+  openCount: number
+  onCheckArea: () => void
+}) {
   return (
-    <section className="paper-panel overflow-hidden rounded-[2.2rem] p-5 md:p-6">
-      <div className="grid gap-6 lg:grid-cols-[1.55fr_0.95fr]">
-        <div className="rounded-[2rem] bg-[linear-gradient(135deg,#ffffff,#f3f7ff)] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] md:p-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-brand-700">
-            <Sparkles size={12} />
-            Fresh groceries, delivered fast
-          </div>
+    <section className="grid gap-6 rounded-xl border border-ink/10 bg-white p-7 shadow-sm lg:grid-cols-12 lg:gap-10 lg:p-10">
+      <div className="lg:col-span-7">
+        <p className="section-kicker text-[11px] font-semibold text-brand-600">
+          {deliveryArea ? `Delivering to ${deliveryArea}` : 'South London grocery market'}
+        </p>
 
-          <h1 className="mt-5 max-w-xl text-4xl font-extrabold leading-[0.95] tracking-[-0.05em] text-slate-950 md:text-6xl">
-            Delicious groceries for the meals you actually cook.
-          </h1>
+        <h1 className="mt-5 max-w-xl font-display text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.02em] text-ink md:text-6xl lg:text-[4rem]">
+          Groceries for the meals you <span className="text-brand-600">actually</span> cook.
+        </h1>
 
-          <p className="mt-4 max-w-lg text-sm leading-7 text-slate-500 md:text-base">
-            Shop trusted African and Caribbean stores near you, then get yams, plantain, fish, spices, and pantry staples delivered the same day.
-          </p>
+        <p className="mt-6 max-w-md text-[15px] leading-7 text-ink/60">
+          Shop trusted African and Caribbean stores near you, then get yams, plantain, fish, spices, and pantry staples delivered the same day.
+        </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href="#stores-near-you"
-              className="inline-flex items-center gap-2 rounded-2xl bg-brand-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-700"
-            >
-              Order now <ArrowRight size={15} />
-            </a>
-            <div className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700">
-              <MapPin size={15} className="text-brand-600" />
-              {deliveryArea ?? 'Check delivery area'}
-            </div>
-          </div>
-
-          <div className="mt-7 grid gap-3 sm:grid-cols-3">
-            <HeroStat label="Open stores" value={`${openCount}`} icon={<Star size={14} />} />
-            <HeroStat label="Delivery" value="45-75 min" icon={<Clock3 size={14} />} />
-            <HeroStat label="Areas" value="South London" icon={<MapPin size={14} />} />
-          </div>
+        <div className="mt-8 flex flex-wrap items-center gap-6">
+          <a
+            href="#stores-near-you"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
+          >
+            Order now <ArrowRight size={14} />
+          </a>
+          <button onClick={onCheckArea} className="flex items-center gap-1.5 text-sm font-semibold text-ink/70 hover:text-ink">
+            <MapPin size={13} />
+            {deliveryArea ?? 'Check delivery area'}
+          </button>
         </div>
 
-        <div className="grid gap-4">
-          <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-[linear-gradient(145deg,#eef5ff,#ffffff)] p-6">
-            <div className="absolute -right-8 top-4 h-40 w-40 rounded-full bg-brand-50" />
-            <div className="absolute bottom-0 right-8 h-52 w-52 rounded-full border-[18px] border-white bg-[radial-gradient(circle_at_top,#b9eacb,#25a057)] shadow-[0_30px_50px_-30px_rgba(37,160,87,0.4)]" />
-            <div className="relative z-10 max-w-[15rem]">
-              <p className="section-kicker text-[11px] font-bold text-brand-600">Weekly pick</p>
-              <h3 className="mt-2 text-2xl font-extrabold tracking-[-0.04em] text-slate-900">
-                New-season produce and freezer staples.
-              </h3>
-              <p className="mt-3 text-sm leading-6 text-slate-500">
-                Browse the stores people come back to when they need a real pantry restock.
-              </p>
-            </div>
-          </div>
+        <dl className="mt-12 flex max-w-md items-baseline gap-10 border-t border-ink/10 pt-6">
+          <HeroStat label="Open now" value={`${openCount}`} />
+          <HeroStat label="Delivery" value="45–75 min" />
+          <HeroStat label="Coverage" value="6 areas" />
+        </dl>
+      </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            <MiniPromo
-              label="Hot deal"
-              title="30% OFF"
-              body="On your first 3 orders"
-            />
-            <MiniPromo
-              label="Fast delivery"
-              title="Same-day slots"
-              body="Available across selected areas"
-            />
-          </div>
+      <div className="flex flex-col gap-6 lg:col-span-5">
+        <div className="relative flex min-h-[16rem] flex-1 flex-col justify-end overflow-hidden rounded-xl bg-brand-600 p-7 text-white">
+          <p className="section-kicker text-[11px] font-semibold text-brand-100">Weekly pick</p>
+          <h3 className="mt-3 font-display text-3xl font-medium leading-[1.05] tracking-[-0.01em]">
+            New-season produce &amp; freezer staples.
+          </h3>
+          <p className="mt-3 max-w-[16rem] text-sm leading-6 text-brand-50/80">
+            The stores people come back to when it&rsquo;s time for a real pantry restock.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6 border-t border-ink/10 pt-5">
+          <PromoLine label="Hot deal" title="30% off" body="On your first 3 orders" />
+          <PromoLine label="Fast delivery" title="Same-day" body="Available across selected areas" />
         </div>
       </div>
     </section>
   )
 }
 
-function MiniPromo({ label, title, body }: { label: string; title: string; body: string }) {
+function PromoLine({ label, title, body }: { label: string; title: string; body: string }) {
   return (
-    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_18px_38px_-34px_rgba(15,23,42,0.18)]">
-      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-600">{label}</p>
-      <p className="mt-2 text-2xl font-extrabold tracking-[-0.04em] text-slate-900">{title}</p>
-      <p className="mt-1 text-sm text-slate-500">{body}</p>
-      <button className="mt-4 text-sm font-bold text-brand-600 transition-colors hover:text-brand-700">
-        Order now
-      </button>
+    <div>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-ink/40">{label}</p>
+      <p className="mt-1.5 font-display text-xl font-medium text-ink">{title}</p>
+      <p className="mt-1 text-xs leading-5 text-ink/55">{body}</p>
     </div>
   )
 }
 
-function HeroStat({ label, value, icon }: { label: string; value: string; icon: ReactNode }) {
+function HeroStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1.3rem] border border-slate-200 bg-white px-4 py-3">
-      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
-        {icon}
-        {label}
-      </div>
-      <p className="mt-2 text-base font-bold text-slate-900">{value}</p>
+    <div>
+      <dt className="text-[10px] font-semibold uppercase tracking-[0.1em] text-ink/40">{label}</dt>
+      <dd className="tabular mt-1.5 font-display text-2xl font-medium text-ink">{value}</dd>
     </div>
   )
 }
 
-function TagPill({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+function TagTab({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
       className={cn(
-        'shrink-0 rounded-full border px-4 py-2 text-xs font-semibold transition-all',
-        active
-          ? 'border-brand-200 bg-brand-50 text-brand-700'
-          : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-900'
+        'shrink-0 whitespace-nowrap border-b-2 pb-0.5 text-xs font-semibold uppercase tracking-[0.06em] transition-colors',
+        active ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink/45 hover:text-ink/70'
       )}
     >
       {label}
     </button>
   )
-}
-
-function getCategoryMonogram(label: string) {
-  return label
-    .split(' ')
-    .slice(0, 2)
-    .map(part => part[0])
-    .join('')
-    .toUpperCase()
 }

@@ -12,3 +12,7 @@ export function formatCurrency(pence: number): string {
 export function formatPhone(phone: string): string {
   return phone.replace(/(\+44)(\d{4})(\d{6})/, '$1 $2 $3')
 }
+
+export function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+}

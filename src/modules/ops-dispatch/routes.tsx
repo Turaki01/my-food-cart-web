@@ -1,12 +1,32 @@
+import { lazy, Suspense } from 'react'
 import type { RouteObject } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
+import { Spinner } from '@shared/components/Spinner'
+import { OpsLayout } from './layout/OpsLayout'
 
-// Placeholder — ops dispatch module scaffold
-const OpsDispatchHomePlaceholder = () => (
-  <div className="min-h-[100dvh] flex items-center justify-center text-gray-400">
-    Ops Dispatch — coming soon
+const LoginPage = lazy(() =>
+  import('./features/auth/LoginPage').then(m => ({ default: m.LoginPage }))
+)
+const DispatchBoardPage = lazy(() =>
+  import('./features/dispatch/DispatchBoardPage').then(m => ({ default: m.DispatchBoardPage }))
+)
+
+const fallback = (
+  <div className="flex items-center justify-center min-h-[50dvh]">
+    <Spinner />
   </div>
 )
 
 export const opsRoutes: RouteObject[] = [
-  { path: '/ops/*', element: <OpsDispatchHomePlaceholder /> },
+  { path: '/ops/login', element: <Suspense fallback={fallback}><LoginPage /></Suspense> },
+
+  {
+    element: <OpsLayout />,
+    children: [
+      { path: '/ops/dispatch', element: <Suspense fallback={fallback}><DispatchBoardPage /></Suspense> },
+    ],
+  },
+
+  { path: '/ops', element: <Navigate to="/ops/dispatch" replace /> },
+  { path: '/ops/*', element: <Navigate to="/ops/dispatch" replace /> },
 ]

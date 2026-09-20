@@ -24,7 +24,7 @@ export function OTPPage() {
   const handleSubmit = async ({ otp }: OTPFormValues) => {
     const { user, isNewUser } = await verifyOTP(pendingPhone, otp)
     setUser(user)
-    navigate(from ?? (isNewUser ? '/customer/zone-check' : '/customer/home'), { replace: true })
+    navigate(isNewUser ? '/auth/welcome' : (from ?? '/customer/home'), { replace: true, state: { from } })
   }
 
   const handleResend = async () => {
@@ -32,18 +32,18 @@ export function OTPPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-surface flex flex-col items-center justify-center px-5 py-10">
-      <div className="w-full max-w-sm bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
+    <div className="min-h-[100dvh] bg-[--paper] flex flex-col items-center justify-center px-5 py-10">
+      <div className="paper-panel w-full max-w-sm rounded-xl p-8 shadow-sm">
         <button
           onClick={() => { setPendingPhone(''); navigate('/auth/phone', { state: { from } }) }}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 mb-6"
+          className="mb-6 flex items-center gap-1.5 text-sm font-semibold text-ink/55 hover:text-ink"
         >
           <ArrowLeft size={16} /> Back
         </button>
 
         <Logo size="md" className="justify-center mb-6" />
 
-        <h1 className="font-display text-xl font-semibold text-gray-900 text-center mb-1">Check your phone</h1>
+        <h1 className="mb-1 text-center font-display text-2xl font-medium tracking-[-0.01em] text-ink">Check your phone</h1>
         <OTPForm
           phone={formatPhone(pendingPhone)}
           onSubmit={handleSubmit}

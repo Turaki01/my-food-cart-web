@@ -1,6 +1,5 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form'
-import { ShieldCheck } from 'lucide-react'
-import { cn } from '@shared/lib/utils'
+import { Badge } from '@shared/components/Badge'
 import type { PaymentFormValues } from '../checkout.schema'
 
 interface MockCardPaymentProps {
@@ -36,111 +35,132 @@ function formatExpiry(raw: string): string {
 
 export function MockCardPayment({ control, errors }: MockCardPaymentProps) {
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-1.5 rounded-full bg-spice-50 text-spice-700 border border-spice-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide w-fit">
-        <ShieldCheck size={11} />
-        Test mode — no real charge
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          className="flex items-center justify-center gap-1.5 rounded-lg border border-ink/15 bg-white py-3 text-sm font-semibold text-ink shadow-sm transition-colors hover:border-ink/30 hover:bg-gray-50"
+        >
+          Apple Pay
+        </button>
+        <button
+          type="button"
+          className="flex items-center justify-center gap-1.5 rounded-lg border border-ink/15 bg-white py-3 text-sm font-semibold text-ink shadow-sm transition-colors hover:border-ink/30 hover:bg-gray-50"
+        >
+          G Pay
+        </button>
       </div>
 
-      <Controller
-        name="cardNumber"
-        control={control}
-        render={({ field }) => {
-          const digits = field.value?.replace(/\D/g, '') ?? ''
-          const brand = detectBrand(digits)
-          return (
-            <FieldShell label="Card number" error={errors.cardNumber?.message}>
-              <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-ink/35">
+        <span className="h-px flex-1 bg-ink/10" />
+        Or pay with card
+        <span className="h-px flex-1 bg-ink/10" />
+      </div>
+
+      <div className={errors.cardNumber || errors.cardExpiry || errors.cardCvc ? 'rounded-lg border border-red-400 bg-white' : 'rounded-lg border border-ink/15 bg-white focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-600/20'}>
+        <Controller
+          name="cardNumber"
+          control={control}
+          render={({ field }) => {
+            const digits = field.value?.replace(/\D/g, '') ?? ''
+            const brand = detectBrand(digits)
+            return (
+              <FieldRow label="Card number">
+                <div className="flex flex-1 items-center gap-2">
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="4242 4242 4242 4242"
+                    maxLength={23}
+                    value={field.value ?? ''}
+                    onChange={e => field.onChange(formatCardNumber(e.target.value))}
+                    onBlur={field.onBlur}
+                    className="tabular flex-1 bg-transparent text-sm text-ink placeholder:text-ink/30 focus:outline-none"
+                  />
+                  {brand && (
+                    <span className="shrink-0 rounded border border-ink/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink/50">
+                      {BRAND_LABEL[brand]}
+                    </span>
+                  )}
+                </div>
+              </FieldRow>
+            )
+          }}
+        />
+
+        <div className="grid grid-cols-2 border-t border-ink/15">
+          <Controller
+            name="cardExpiry"
+            control={control}
+            render={({ field }) => (
+              <FieldRow label="Expiry" bordered>
                 <input
                   type="text"
                   inputMode="numeric"
-                  placeholder="4242 4242 4242 4242"
-                  maxLength={23}
+                  placeholder="MM/YY"
+                  maxLength={5}
                   value={field.value ?? ''}
-                  onChange={e => field.onChange(formatCardNumber(e.target.value))}
+                  onChange={e => field.onChange(formatExpiry(e.target.value))}
                   onBlur={field.onBlur}
-                  className="flex-1 text-sm text-gray-900 bg-transparent placeholder:text-gray-300 focus:outline-none tabular-nums"
+                  className="tabular w-full bg-transparent text-sm text-ink placeholder:text-ink/30 focus:outline-none"
                 />
-                {brand && (
-                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-gray-400 border border-gray-200 rounded px-1.5 py-0.5">
-                    {BRAND_LABEL[brand]}
-                  </span>
-                )}
-              </div>
-            </FieldShell>
-          )
-        }}
-      />
-
-      <div className="grid grid-cols-2 gap-2.5">
-        <Controller
-          name="cardExpiry"
-          control={control}
-          render={({ field }) => (
-            <FieldShell label="Expiry" error={errors.cardExpiry?.message}>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="MM/YY"
-                maxLength={5}
-                value={field.value ?? ''}
-                onChange={e => field.onChange(formatExpiry(e.target.value))}
-                onBlur={field.onBlur}
-                className="w-full text-sm text-gray-900 bg-transparent placeholder:text-gray-300 focus:outline-none tabular-nums"
-              />
-            </FieldShell>
-          )}
-        />
-        <Controller
-          name="cardCvc"
-          control={control}
-          render={({ field }) => (
-            <FieldShell label="CVC" error={errors.cardCvc?.message}>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="123"
-                maxLength={4}
-                value={field.value ?? ''}
-                onChange={e => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                onBlur={field.onBlur}
-                className="w-full text-sm text-gray-900 bg-transparent placeholder:text-gray-300 focus:outline-none tabular-nums"
-              />
-            </FieldShell>
-          )}
-        />
+              </FieldRow>
+            )}
+          />
+          <Controller
+            name="cardCvc"
+            control={control}
+            render={({ field }) => (
+              <FieldRow label="CVC">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="123"
+                  maxLength={4}
+                  value={field.value ?? ''}
+                  onChange={e => field.onChange(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  onBlur={field.onBlur}
+                  className="tabular w-full bg-transparent text-sm text-ink placeholder:text-ink/30 focus:outline-none"
+                />
+              </FieldRow>
+            )}
+          />
+        </div>
       </div>
+      {(errors.cardNumber || errors.cardExpiry || errors.cardCvc) && (
+        <p className="text-xs text-red-600">
+          {errors.cardNumber?.message ?? errors.cardExpiry?.message ?? errors.cardCvc?.message}
+        </p>
+      )}
 
-      <p className="text-[11px] text-gray-400 leading-relaxed">
-        Use <span className="font-mono text-gray-500">4242 4242 4242 4242</span> for a successful test
-        payment, or <span className="font-mono text-gray-500">4000 0000 0000 0002</span> to simulate a
+      <p className="text-[11px] leading-relaxed text-ink/40">
+        You may be asked to verify this payment with your bank (3D Secure) before it completes.
+      </p>
+
+      <Badge variant="spice">Test mode — no real charge</Badge>
+
+      <p className="text-[11px] leading-relaxed text-ink/40">
+        Use <span className="font-medium text-ink/60">4242 4242 4242 4242</span> for a successful test
+        payment, or <span className="font-medium text-ink/60">4000 0000 0000 0002</span> to simulate a
         decline.
       </p>
     </div>
   )
 }
 
-function FieldShell({
+function FieldRow({
   label,
-  error,
+  bordered,
   children,
 }: {
   label: string
-  error?: string
+  bordered?: boolean
   children: React.ReactNode
 }) {
   return (
-    <div>
-      <div
-        className={cn(
-          'rounded-2xl border px-4 py-3 transition-colors',
-          error ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50/50 focus-within:border-brand-300 focus-within:bg-white'
-        )}
-      >
-        <p className="text-[10px] text-gray-400 mb-1.5 font-medium tracking-wide uppercase">{label}</p>
-        {children}
-      </div>
-      {error && <p className="text-xs text-red-600 mt-1.5">{error}</p>}
+    <div className={bordered ? 'border-r border-ink/15 px-4 py-3' : 'px-4 py-3'}>
+      <p className="mb-1.5 text-[10px] font-medium uppercase tracking-wide text-ink/40">{label}</p>
+      <div className="flex items-center">{children}</div>
     </div>
   )
 }

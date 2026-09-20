@@ -27,6 +27,44 @@ export async function signOut(): Promise<void> {
   console.log('[api] signOut')
 }
 
+// ─── Store partner auth ─────────────────────────────────────────────────────
+
+export async function loginPartner(email: string, _password: string): Promise<{ user: User }> {
+  // TODO: POST /api/partner/login  { email, password }
+  console.log('[api] loginPartner', email)
+  await delay(800)
+
+  return {
+    user: {
+      id: 'mock-partner-id',
+      phone: '',
+      email,
+      name: "Mama Africa's Kitchen",
+      role: 'store_partner' as UserRole,
+      createdAt: new Date().toISOString(),
+    },
+  }
+}
+
+// ─── Ops dispatch auth ──────────────────────────────────────────────────────
+
+export async function loginOps(email: string, _password: string): Promise<{ user: User }> {
+  // TODO: POST /api/ops/login  { email, password }
+  console.log('[api] loginOps', email)
+  await delay(800)
+
+  return {
+    user: {
+      id: 'mock-ops-id',
+      phone: '',
+      email,
+      name: 'Dispatch',
+      role: 'ops' as UserRole,
+      createdAt: new Date().toISOString(),
+    },
+  }
+}
+
 // ─── Waitlist ───────────────────────────────────────────────────────────────
 
 export async function joinWaitlist(data: { name: string; email: string; postcode: string }): Promise<void> {

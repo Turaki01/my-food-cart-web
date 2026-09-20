@@ -1,4 +1,3 @@
-import { Clock3, MapPin, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@shared/lib/utils'
 import type { MockStore } from '../mock'
@@ -22,65 +21,44 @@ export function StoreCard({ store }: StoreCardProps) {
       onClick={handleClick}
       onKeyDown={event => event.key === 'Enter' && handleClick()}
       className={cn(
-        'overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_22px_44px_-36px_rgba(15,23,42,0.2)] transition-all',
-        store.isOpen ? 'cursor-pointer hover:-translate-y-1 hover:shadow-[0_24px_48px_-30px_rgba(15,23,42,0.24)]' : 'opacity-60'
+        'group overflow-hidden rounded-xl border border-ink/10 bg-white shadow-sm transition-shadow',
+        store.isOpen ? 'cursor-pointer hover:shadow-md' : 'opacity-50'
       )}
     >
-      <div className={cn('relative h-48 bg-gradient-to-br', store.coverGradient)}>
-        {store.imageUrl && (
-          <img src={store.imageUrl} alt={store.name} className="absolute inset-0 h-full w-full object-cover" />
-        )}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02),rgba(15,23,42,0.24))]" />
-
-        <div className="absolute left-4 top-4 flex items-center gap-2">
-          <span className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold text-slate-900 shadow-sm">
-            {store.categoryTags[0]}
+      <div className={cn('relative flex h-36 items-center justify-center overflow-hidden bg-gradient-to-br', store.coverGradient)}>
+        {store.imageUrl ? (
+          <img
+            src={store.imageUrl}
+            alt={store.name}
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
+        ) : (
+          <span className="font-display text-6xl font-medium leading-none text-white/85">
+            {store.name.trim()[0]?.toUpperCase()}
           </span>
-          {!store.isOpen && (
-            <span className="rounded-full bg-slate-900/80 px-3 py-1 text-[11px] font-semibold text-white">
-              Closed
-            </span>
-          )}
-        </div>
+        )}
 
-        {!store.imageUrl && (
-          <div className="absolute inset-x-4 bottom-4 rounded-[1.4rem] bg-white/90 p-4 backdrop-blur-sm">
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand-600">Featured store</p>
-            <p className="mt-1 text-xl font-extrabold tracking-[-0.04em] text-slate-900">{store.name}</p>
-          </div>
+        {!store.isOpen && (
+          <span className="absolute left-3 top-3 bg-ink px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--paper)]">
+            Closed
+          </span>
         )}
       </div>
 
-      <div className="p-5">
+      <div className="p-4">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="text-lg font-extrabold tracking-[-0.03em] text-slate-900">{store.name}</h3>
-            <div className="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
-              <MapPin size={13} className="text-slate-400" />
-              <span>{store.area}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
-            <Star size={12} className="fill-current" />
-            4.8
-          </div>
+          <h3 className="font-display text-lg font-medium leading-tight text-ink">{store.name}</h3>
+          <span className="tabular shrink-0 pt-0.5 text-sm font-semibold text-ink/70">★ 4.8</span>
         </div>
+        <p className="mt-1 text-xs text-ink/50">{store.area}</p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {store.categoryTags.map(tag => (
-            <span key={tag} className="rounded-full bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-500">
-              {tag}
-            </span>
-          ))}
-        </div>
+        <p className="mt-3 text-[11px] uppercase tracking-[0.08em] text-ink/40">
+          {store.categoryTags.join(' · ')}
+        </p>
 
-        <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4 text-sm text-slate-500">
-          <div className="flex items-center gap-1.5">
-            <Clock3 size={14} className="text-slate-400" />
-            <span>{store.estimatedDeliveryMin}-{store.estimatedDeliveryMax} min</span>
-          </div>
-          <span className="font-semibold text-slate-700">£{(store.minimumOrderValue / 100).toFixed(0)} min</span>
+        <div className="mt-4 flex items-center justify-between border-t border-ink/10 pt-3 text-xs text-ink/55">
+          <span>{store.estimatedDeliveryMin}–{store.estimatedDeliveryMax} min</span>
+          <span className="tabular font-semibold text-ink/70">£{(store.minimumOrderValue / 100).toFixed(0)} min order</span>
         </div>
       </div>
     </article>
