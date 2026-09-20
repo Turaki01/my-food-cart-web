@@ -2,14 +2,14 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Clock, MapPin } from 'lucide-react'
 import { Button } from '@shared/components/Button'
 import { cn, formatCurrency, formatDate } from '@shared/lib/utils'
-import { getOrder } from './mock'
+import { useOrdersStore } from '@shared/stores/orders.store'
 import { OrderStatusBadge } from '@shared/components/OrderStatusBadge'
 import { useReorder } from './useReorder'
 
 export function OrderDetailPage() {
   const { orderNumber } = useParams<{ orderNumber: string }>()
   const reorder = useReorder()
-  const order = orderNumber ? getOrder(orderNumber) : undefined
+  const order = useOrdersStore(s => s.orders.find(o => o.orderNumber === orderNumber))
 
   if (!order) return <Navigate to="/customer/orders" replace />
 
@@ -72,6 +72,9 @@ export function OrderDetailPage() {
             <Clock size={13} className="shrink-0 text-ink/40" />
             <p className="text-sm text-ink">{order.deliverySlot}</p>
           </div>
+          {order.courierName && (
+            <p className="text-xs text-ink/45">Courier: {order.courierName}</p>
+          )}
         </div>
 
         <div className="space-y-2 px-6 py-5">

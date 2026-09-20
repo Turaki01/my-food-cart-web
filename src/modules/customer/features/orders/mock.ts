@@ -121,7 +121,3 @@ export const MOCK_ORDERS: Order[] = [
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(),
   },
 ]
-
-export function getOrder(orderNumber: string): Order | undefined {
-  return MOCK_ORDERS.find(o => o.orderNumber === orderNumber)
-}

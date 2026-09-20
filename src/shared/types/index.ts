@@ -68,6 +68,7 @@ export interface Order {
   total: number
   status: OrderStatus
   createdAt: string
+  courierName?: string
 }
 
 export interface DeliveryZone {

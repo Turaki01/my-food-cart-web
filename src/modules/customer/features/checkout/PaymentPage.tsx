@@ -8,6 +8,8 @@ import { Button } from '@shared/components/Button'
 import { useAuthStore } from '@shared/stores/auth.store'
 import { useCartStore, cartSubtotal } from '@shared/stores/cart.store'
 import { useCheckoutStore } from '@shared/stores/checkout.store'
+import { useLocationStore } from '@shared/stores/location.store'
+import { useOrdersStore } from '@shared/stores/orders.store'
 import { MockCardPayment } from './components/MockCardPayment'
 import { TEST_CARD_DECLINE, generateDeliverySlots, paymentSchema, type PaymentFormValues } from './checkout.schema'
 
@@ -16,6 +18,8 @@ export function PaymentPage() {
   const user = useAuthStore(s => s.user)
   const { items, storeId, storeName, deliveryFee } = useCartStore()
   const { draft } = useCheckoutStore()
+  const deliveryArea = useLocationStore(s => s.deliveryArea)
+  const addOrder = useOrdersStore(s => s.addOrder)
 
   const [paymentError, setPaymentError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -55,6 +59,29 @@ export function PaymentPage() {
     }
 
     const orderNumber = `MFC-${Date.now().toString(36).toUpperCase().slice(-6)}`
+    const postcode = draft.postcode.toUpperCase()
+
+    addOrder({
+      id: `order-${Date.now().toString(36)}`,
+      orderNumber,
+      storeId: storeId ?? '',
+      storeName,
+      items: [...items],
+      deliveryAddress: {
+        id: `addr-${Date.now().toString(36)}`,
+        line1: draft.line1,
+        line2: draft.line2,
+        postcode,
+        area: deliveryArea ?? postcode,
+      },
+      deliverySlot: selectedSlot?.label ?? draft.deliverySlot,
+      deliveryNote: draft.deliveryNote,
+      subtotal,
+      deliveryFee,
+      total,
+      status: 'confirmed',
+      createdAt: new Date().toISOString(),
+    })
 
     navigate('/customer/order-confirmation', {
       replace: true,
@@ -63,7 +90,7 @@ export function PaymentPage() {
         storeName,
         storeId,
         items: [...items],
-        address: { line1: draft.line1, line2: draft.line2, postcode: draft.postcode.toUpperCase() },
+        address: { line1: draft.line1, line2: draft.line2, postcode },
         deliverySlot: selectedSlot?.label ?? draft.deliverySlot,
         deliveryNote: draft.deliveryNote,
         subtotal,

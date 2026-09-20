@@ -46,6 +46,25 @@ export async function loginPartner(email: string, _password: string): Promise<{ 
   }
 }
 
+// ─── Ops dispatch auth ──────────────────────────────────────────────────────
+
+export async function loginOps(email: string, _password: string): Promise<{ user: User }> {
+  // TODO: POST /api/ops/login  { email, password }
+  console.log('[api] loginOps', email)
+  await delay(800)
+
+  return {
+    user: {
+      id: 'mock-ops-id',
+      phone: '',
+      email,
+      name: 'Dispatch',
+      role: 'ops' as UserRole,
+      createdAt: new Date().toISOString(),
+    },
+  }
+}
+
 // ─── Waitlist ───────────────────────────────────────────────────────────────
 
 export async function joinWaitlist(data: { name: string; email: string; postcode: string }): Promise<void> {

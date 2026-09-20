@@ -2,19 +2,20 @@ import { Link, Navigate } from 'react-router-dom'
 import { Package } from 'lucide-react'
 import { Button } from '@shared/components/Button'
 import { useAuthStore } from '@shared/stores/auth.store'
+import { useOrdersStore } from '@shared/stores/orders.store'
 import { cn, formatCurrency, formatDate } from '@shared/lib/utils'
 import { MOCK_STORES } from '@modules/customer/features/home/mock'
-import { MOCK_ORDERS } from './mock'
 import { OrderStatusBadge } from '@shared/components/OrderStatusBadge'
 import { useReorder } from './useReorder'
 
 export function OrdersPage() {
   const user = useAuthStore(s => s.user)
+  const orders = useOrdersStore(s => s.orders)
   const reorder = useReorder()
 
   if (!user) return <Navigate to="/auth/phone" state={{ from: '/customer/orders' }} replace />
 
-  if (MOCK_ORDERS.length === 0) {
+  if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-28 text-center">
         <Package size={28} className="mb-4 text-ink/25" />
@@ -38,12 +39,12 @@ export function OrdersPage() {
         <p className="section-kicker text-[11px] font-semibold text-brand-600">Your account</p>
         <h1 className="mt-2 font-display text-2xl font-medium tracking-[-0.01em] text-ink">Order history</h1>
         <p className="mt-2 text-sm text-ink/55">
-          {MOCK_ORDERS.length} order{MOCK_ORDERS.length !== 1 ? 's' : ''} · reorder in one tap
+          {orders.length} order{orders.length !== 1 ? 's' : ''} · reorder in one tap
         </p>
       </div>
 
       <div className="space-y-4">
-        {MOCK_ORDERS.map(order => {
+        {orders.map(order => {
           const store = MOCK_STORES.find(s => s.id === order.storeId)
           const itemSummary =
             order.items.length <= 2
