@@ -5,7 +5,7 @@ import { Button } from '@shared/components/Button'
 import { useCartStore, cartSubtotal, cartItemCount } from '@shared/stores/cart.store'
 import type { CartItem } from '@shared/stores/cart.store'
 import { MOCK_PRODUCTS } from '@modules/customer/features/catalogue/mock'
-import { MOCK_STORES } from '@modules/customer/features/home/mock'
+import { useStoresStore } from '@shared/stores/stores.store'
 
 export function CartPage() {
   const { items, storeId, storeName, deliveryFee, clearCart } = useCartStore()
@@ -14,7 +14,7 @@ export function CartPage() {
   const subtotal = cartSubtotal(items)
   const total = subtotal + deliveryFee
   const count = cartItemCount(items)
-  const store = MOCK_STORES.find(s => s.id === storeId)
+  const store = useStoresStore(s => s.stores.find(store => store.id === storeId))
   const minimumOrderValue = store?.minimumOrderValue ?? 0
   const shortfall = Math.max(0, minimumOrderValue - subtotal)
 

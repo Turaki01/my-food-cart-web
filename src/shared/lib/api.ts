@@ -65,6 +65,25 @@ export async function loginOps(email: string, _password: string): Promise<{ user
   }
 }
 
+// ─── Admin auth ─────────────────────────────────────────────────────────────
+
+export async function loginAdmin(email: string, _password: string): Promise<{ user: User }> {
+  // TODO: POST /api/admin/login  { email, password }
+  console.log('[api] loginAdmin', email)
+  await delay(800)
+
+  return {
+    user: {
+      id: 'mock-admin-id',
+      phone: '',
+      email,
+      name: 'Admin',
+      role: 'admin' as UserRole,
+      createdAt: new Date().toISOString(),
+    },
+  }
+}
+
 // ─── Waitlist ───────────────────────────────────────────────────────────────
 
 export async function joinWaitlist(data: { name: string; email: string; postcode: string }): Promise<void> {

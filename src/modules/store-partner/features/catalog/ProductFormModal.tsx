@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ImagePlus } from 'lucide-react'
+import type { z } from 'zod'
 import { Input } from '@shared/components/Input'
 import { Button } from '@shared/components/Button'
 import { readFileAsDataUrl } from '@shared/lib/file'
@@ -32,7 +33,7 @@ export function ProductFormModal({ categories, onClose, onSubmit }: ProductFormM
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<NewProductFormValues>({
+  } = useForm<z.input<typeof newProductSchema>, unknown, NewProductFormValues>({
     resolver: zodResolver(newProductSchema),
     defaultValues: { name: '', category: '', unit: '', price: undefined, quantity: undefined },
   })

@@ -4,7 +4,7 @@ import { ArrowLeft, Clock3, MapPin, Star } from 'lucide-react'
 import { useCartStore } from '@shared/stores/cart.store'
 import { Button } from '@shared/components/Button'
 import { cn } from '@shared/lib/utils'
-import { MOCK_STORES } from '@modules/customer/features/home/mock'
+import { useStoresStore } from '@shared/stores/stores.store'
 import { BasketSidebar } from './components/BasketSidebar'
 import { CategoryNav } from './components/CategoryNav'
 import { ProductCard } from './components/ProductCard'
@@ -19,7 +19,7 @@ export function CataloguePage() {
   const { storeName: cartStoreName, clearCart, addItem } = useCartStore()
   const [conflictProduct, setConflictProduct] = useState<PendingAdd | null>(null)
 
-  const store = MOCK_STORES.find(item => item.id === storeId)
+  const store = useStoresStore(s => s.stores.find(item => item.id === storeId))
   if (!store) return <Navigate to="/customer/home" replace />
 
   const products = MOCK_PRODUCTS[storeId ?? ''] ?? []

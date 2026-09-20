@@ -10,7 +10,7 @@ import { useCartStore, cartSubtotal } from '@shared/stores/cart.store'
 import { useAuthStore } from '@shared/stores/auth.store'
 import { useLocationStore } from '@shared/stores/location.store'
 import { useCheckoutStore } from '@shared/stores/checkout.store'
-import { MOCK_STORES } from '@modules/customer/features/home/mock'
+import { useStoresStore } from '@shared/stores/stores.store'
 import {
   checkoutDetailsSchema,
   generateDeliverySlots,
@@ -25,7 +25,7 @@ export function CheckoutPage() {
   const deliveryArea = useLocationStore(s => s.deliveryArea)
   const { draft, setDraft } = useCheckoutStore()
 
-  const store = MOCK_STORES.find(s => s.id === storeId)
+  const store = useStoresStore(s => s.stores.find(store => store.id === storeId))
   const slots = generateDeliverySlots()
   const subtotal = cartSubtotal(items)
   const total = subtotal + deliveryFee

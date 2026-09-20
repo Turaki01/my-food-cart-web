@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CheckCircle2 } from 'lucide-react'
+import type { z } from 'zod'
 import { Input } from '@shared/components/Input'
 import { Button } from '@shared/components/Button'
 import { Switch } from '@shared/components/Switch'
@@ -19,7 +20,7 @@ export function SettingsPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<StoreSettingsFormValues>({
+  } = useForm<z.input<typeof storeSettingsSchema>, unknown, StoreSettingsFormValues>({
     resolver: zodResolver(storeSettingsSchema),
     defaultValues: {
       minimumOrderValue: profile.minimumOrderValue / 100,
