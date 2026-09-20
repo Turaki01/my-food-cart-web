@@ -1,35 +1,40 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ArrowRight, MapPin, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { MOCK_PRODUCTS } from '@modules/customer/features/catalogue/mock'
 import { useLocationStore } from '@shared/stores/location.store'
+import { useStoresStore } from '@shared/stores/stores.store'
 import { cn } from '@shared/lib/utils'
 import { StoreCard } from './components/StoreCard'
-import { MOCK_STORES } from './mock'
-
-const ALL_TAGS = [...new Set(MOCK_STORES.flatMap(store => store.categoryTags))]
-const STORE_SEARCH_TERMS = Object.fromEntries(
-  MOCK_STORES.map(store => [
-    store.id,
-    [
-      store.name,
-      store.area,
-      ...store.categoryTags,
-      ...(MOCK_PRODUCTS[store.id] ?? []).flatMap(product => [product.name, product.category, product.hint]),
-    ].map(value => value.toLowerCase()),
-  ])
-)
 
 export function HomePage() {
   const navigate = useNavigate()
   const deliveryArea = useLocationStore(s => s.deliveryArea)
+  const stores = useStoresStore(s => s.stores)
   const [query, setQuery] = useState('')
   const [activeTag, setActiveTag] = useState<string | null>(null)
   const normalizedQuery = query.trim().toLowerCase()
 
-  const filtered = MOCK_STORES.filter(store => {
+  const allTags = useMemo(() => [...new Set(stores.flatMap(store => store.categoryTags))], [stores])
+  const storeSearchTerms = useMemo(
+    () =>
+      Object.fromEntries(
+        stores.map(store => [
+          store.id,
+          [
+            store.name,
+            store.area,
+            ...store.categoryTags,
+            ...(MOCK_PRODUCTS[store.id] ?? []).flatMap(product => [product.name, product.category, product.hint]),
+          ].map(value => value.toLowerCase()),
+        ])
+      ),
+    [stores]
+  )
+
+  const filtered = stores.filter(store => {
     const matchesQuery = normalizedQuery
-      ? STORE_SEARCH_TERMS[store.id]?.some(term => term.includes(normalizedQuery))
+      ? storeSearchTerms[store.id]?.some(term => term.includes(normalizedQuery))
       : true
     const matchesTag = activeTag ? store.categoryTags.includes(activeTag) : true
     return matchesQuery && matchesTag
@@ -37,9 +42,9 @@ export function HomePage() {
 
   const openCount = filtered.filter(store => store.isOpen).length
 
-  const featuredCategories = ALL_TAGS.slice(0, 6).map(tag => ({
+  const featuredCategories = allTags.slice(0, 6).map(tag => ({
     tag,
-    count: MOCK_STORES.filter(store => store.categoryTags.includes(tag)).length,
+    count: stores.filter(store => store.categoryTags.includes(tag)).length,
   }))
 
   return (
@@ -109,7 +114,7 @@ export function HomePage() {
 
           <div className="flex gap-6 overflow-x-auto pb-1 scrollbar-none">
             <TagTab label="All" active={activeTag === null} onClick={() => setActiveTag(null)} />
-            {ALL_TAGS.map(tag => (
+            {allTags.map(tag => (
               <TagTab key={tag} label={tag} active={activeTag === tag} onClick={() => setActiveTag(tag === activeTag ? null : tag)} />
             ))}
           </div>

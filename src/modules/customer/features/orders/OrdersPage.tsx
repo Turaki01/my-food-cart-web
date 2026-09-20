@@ -4,13 +4,14 @@ import { Button } from '@shared/components/Button'
 import { useAuthStore } from '@shared/stores/auth.store'
 import { useOrdersStore } from '@shared/stores/orders.store'
 import { cn, formatCurrency, formatDate } from '@shared/lib/utils'
-import { MOCK_STORES } from '@modules/customer/features/home/mock'
+import { useStoresStore } from '@shared/stores/stores.store'
 import { OrderStatusBadge } from '@shared/components/OrderStatusBadge'
 import { useReorder } from './useReorder'
 
 export function OrdersPage() {
   const user = useAuthStore(s => s.user)
   const orders = useOrdersStore(s => s.orders)
+  const stores = useStoresStore(s => s.stores)
   const reorder = useReorder()
 
   if (!user) return <Navigate to="/auth/phone" state={{ from: '/customer/orders' }} replace />
@@ -45,7 +46,7 @@ export function OrdersPage() {
 
       <div className="space-y-4">
         {orders.map(order => {
-          const store = MOCK_STORES.find(s => s.id === order.storeId)
+          const store = stores.find(s => s.id === order.storeId)
           const itemSummary =
             order.items.length <= 2
               ? order.items.map(i => i.product.name).join(', ')

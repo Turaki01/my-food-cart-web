@@ -3,7 +3,7 @@ import { Inbox, Truck } from 'lucide-react'
 import { Button } from '@shared/components/Button'
 import { OrderStatusBadge } from '@shared/components/OrderStatusBadge'
 import { cn, formatCurrency, formatDate } from '@shared/lib/utils'
-import { MOCK_STORES } from '@modules/customer/features/home/mock'
+import { useStoresStore } from '@shared/stores/stores.store'
 import type { Order, OrderStatus } from '@shared/types'
 import { useOpsOrders } from './useOpsOrders'
 
@@ -68,7 +68,7 @@ export function DispatchBoardPage() {
 
 function DeliveryCard({ order, onDeliver }: { order: Order; onDeliver: (courierName?: string) => void }) {
   const [courierName, setCourierName] = useState(order.courierName ?? '')
-  const store = MOCK_STORES.find(s => s.id === order.storeId)
+  const store = useStoresStore(s => s.stores.find(store => store.id === order.storeId))
   const itemSummary = order.items.map(i => `${i.quantity}× ${i.product.name}`).join(', ')
 
   return (
